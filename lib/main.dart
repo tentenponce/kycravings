@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:kycravings/presentation/app.dart';
+import 'package:kycravings/presentation/app/app.dart';
 
 void main() {
   runZonedGuarded(() {
