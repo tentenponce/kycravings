@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kycravings/presentation/drawer/drawer_view.dart';
 import 'package:kycravings/presentation/home/subviews/predict_button.dart';
 import 'package:kycravings/presentation/shared/assets/assets.gen.dart';
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
@@ -9,21 +10,23 @@ import 'package:kycravings/presentation/shared/widgets/kyc_app_bar.dart';
 import 'package:lottie/lottie.dart';
 
 class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+  HomeView({super.key});
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: KycColors.white,
+      drawer: const DrawerView(),
       appBar: KycAppBar(
         title: I18n.of(context).appName,
         leadingIcon: const Icon(
           Icons.menu,
           color: KycColors.white,
         ),
-        onLeadingIconClick: () {
-          // TODO: show drawer
-        },
+        onLeadingIconClick: () => _scaffoldKey.currentState?.openDrawer(),
       ),
       body: Center(
         child: Column(
@@ -40,7 +43,7 @@ class HomeView extends StatelessWidget {
                 ),
                 Text(
                   I18n.of(context).homeShakeYourPhone,
-                  style: KycTextStyles.textStyle2Reg(),
+                  style: KycTextStyles.textStyle4Reg(),
                 ),
               ],
             ),
