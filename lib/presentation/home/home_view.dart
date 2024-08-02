@@ -43,7 +43,7 @@ class HomeView extends StatelessWidget {
                 ),
                 Text(
                   I18n.of(context).homeShakeYourPhone,
-                  style: KycTextStyles.textStyle4Reg(),
+                  style: KycTextStyles.textStyle5Reg(),
                 ),
               ],
             ),

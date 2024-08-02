@@ -19,6 +19,8 @@ class KycAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: KycColors.primary,
+      elevation: 6,
+      shadowColor: KycColors.black.withOpacity(0.8),
       leading: IconButton(
         icon: leadingIcon,
         onPressed: onLeadingIconClick,
