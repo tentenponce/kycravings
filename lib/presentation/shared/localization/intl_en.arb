@@ -1,5 +1,9 @@
 {
     "appName": "KYCravings",
     "homeShakeYourPhone": "or try shaking your phone!",
-    "homePredictButton": "Predict!"
+    "homePredictButton": "Predict!",
+    "drawerTitle": "Know Your Cravings!",
+    "drawerCravings": "Your Cravings",
+    "drawerHistory": "Cravings History",
+    "drawerAbout": "About"
 }

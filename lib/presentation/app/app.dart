@@ -28,7 +28,7 @@ class App extends StatelessWidget {
           textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme),
           useMaterial3: true,
         ),
-        home: const HomeView(),
+        home: HomeView(),
       ),
     );
   }

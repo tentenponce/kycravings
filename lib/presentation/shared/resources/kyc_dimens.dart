@@ -49,7 +49,7 @@ abstract final class KycDimens {
   static const double icon6 = 46;
   static const double icon7 = 52;
   static const double icon8 = 120;
-  static const double icon9 = 160;
+  static const double icon9 = 130;
   static const double icon10 = 150;
   static const double icon11 = 200;
 
