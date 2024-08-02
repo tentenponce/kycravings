@@ -14,7 +14,6 @@ class DrawerView extends StatelessWidget {
     return Drawer(
       backgroundColor: KycColors.white,
       child: ListView(
-        // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: [
           Container(
