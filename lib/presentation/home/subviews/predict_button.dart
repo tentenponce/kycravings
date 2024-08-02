@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_blurs.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_dimens.dart';
@@ -23,7 +24,7 @@ class PredictButton extends StatelessWidget {
       ),
       alignment: Alignment.center,
       child: Text(
-        'Predict!',
+        I18n.of(context).homePredictButton,
         style: KycTextStyles.h1Bold(color: KycColors.primary),
       ),
     );

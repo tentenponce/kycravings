@@ -11,8 +11,11 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_screenutil: ^5.9.3
   google_fonts: ^6.2.1
+  intl: ^0.19.0
   lottie: ^3.1.2
 
 dev_dependencies:
@@ -23,3 +26,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+flutter_intl:
+  enabled: true
+  class_name: I18n
+  arb_dir: lib/presentation/shared/localization
+  output_dir: lib/presentation/shared/localization/generated
