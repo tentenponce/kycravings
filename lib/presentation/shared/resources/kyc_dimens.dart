@@ -19,17 +19,18 @@ abstract final class KycDimens {
   static const double space17 = 100;
   static const double space18 = 187;
 
-  static const double font1 = 12;
-  static const double font2 = 14;
-  static const double font3 = 16;
-  static const double font4 = 18;
-  static const double font5 = 20;
-  static const double font6 = 24;
-  static const double font7 = 28;
-  static const double font8 = 32;
-  static const double font9 = 36;
-  static const double font10 = 40;
-  static const double font11 = 64;
+  static const double font1 = 10;
+  static const double font2 = 12;
+  static const double font3 = 14;
+  static const double font4 = 16;
+  static const double font5 = 18;
+  static const double font6 = 20;
+  static const double font7 = 24;
+  static const double font8 = 28;
+  static const double font9 = 32;
+  static const double font10 = 36;
+  static const double font11 = 40;
+  static const double font12 = 64;
 
   static const double radius1 = 4;
   static const double radius2 = 8;
@@ -40,5 +41,18 @@ abstract final class KycDimens {
   static const double radius7 = 30;
   static const double radiusCircle = 100;
 
-  static const double predictRadius = 200;
+  static const double icon1 = 8;
+  static const double icon2 = 16;
+  static const double icon3 = 24;
+  static const double icon4 = 32;
+  static const double icon5 = 40;
+  static const double icon6 = 46;
+  static const double icon7 = 52;
+  static const double icon8 = 120;
+  static const double icon9 = 160;
+  static const double icon10 = 150;
+  static const double icon11 = 200;
+
+  static const double predictRadiusRegular = 200;
+  static const double predictRadiusSmall = 180;
 }
