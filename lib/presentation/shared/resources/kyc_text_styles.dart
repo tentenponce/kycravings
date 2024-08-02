@@ -35,7 +35,27 @@ abstract final class KycTextStyles {
     );
   }
 
+  static TextStyle textStyle3Bold({
+    Color color = KycColors.black,
+  }) {
+    return GoogleFonts.inter(
+      color: color,
+      fontSize: KycDimens.font3.sp,
+      fontWeight: FontWeight.w700,
+    );
+  }
+
   static TextStyle textStyle4Reg({
+    Color color = KycColors.black,
+  }) {
+    return GoogleFonts.inter(
+      color: color,
+      fontSize: KycDimens.font2.sp,
+      fontWeight: FontWeight.w400,
+    );
+  }
+
+  static TextStyle textStyle5Reg({
     Color color = KycColors.black,
   }) {
     return GoogleFonts.inter(

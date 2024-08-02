@@ -4,6 +4,7 @@ import 'package:kycravings/presentation/shared/localization/generated/l10n.dart'
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_dimens.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_text_styles.dart';
+import 'package:kycravings/presentation/your_cravings/your_cravings_view.dart';
 import 'package:lottie/lottie.dart';
 
 class DrawerView extends StatelessWidget {
@@ -34,7 +35,11 @@ class DrawerView extends StatelessWidget {
               I18n.of(context).drawerCravings,
               style: KycTextStyles.textStyle3Reg(),
             ),
-            onTap: () => {},
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const YourCravingsView(),
+              ),
+            ),
           ),
           ListTile(
             title: Text(

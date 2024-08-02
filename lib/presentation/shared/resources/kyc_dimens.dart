@@ -55,4 +55,6 @@ abstract final class KycDimens {
 
   static const double predictRadiusRegular = 200;
   static const double predictRadiusSmall = 180;
+
+  static const double tagHeight = 35;
 }
