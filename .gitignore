@@ -32,6 +32,8 @@ migrate_working_dir/
 /build/
 **/generated/**
 **/*.gen.dart
+**/*.g.dart
+**/*.config.dart
 
 # Symbolication related
 app.*.symbols
