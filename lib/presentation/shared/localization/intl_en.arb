@@ -1,10 +1,17 @@
 {
     "appName": "KYCravings",
+    "genericAdd": "Add",
+    "genericCancel": "Cancel",
     "homeShakeYourPhone": "or try shaking your phone!",
     "homePredictButton": "Predict!",
     "drawerTitle": "Know Your Cravings!",
     "drawerCravings": "Your Cravings",
     "drawerHistory": "Cravings History",
     "drawerAbout": "About",
-    "yourCravingsTitle": "Your Cravings"
+    "yourCravingsTitle": "Your Cravings",
+    "addCravingsHint": "Put your food craving here",
+    "addCravingsCategoryListTitle": "Click to select your craving categories below:",
+    "addCravingsCategoryButton": "Add Category +",
+    "addCravingsCategoryDialogTitle": "Add Category",
+    "addCravingsCategoryDialogErrorEmpty": "Cannot add empty category"
 }

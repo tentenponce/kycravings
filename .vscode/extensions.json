@@ -4,5 +4,6 @@
         "dart-code.dart-code",
         "gaetschwartz.build-runner",
         "localizely.flutter-intl",
+        "nash.awesome-flutter-snippets",
     ]
 }

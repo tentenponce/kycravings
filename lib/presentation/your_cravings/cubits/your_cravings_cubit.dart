@@ -7,7 +7,7 @@ import 'package:kycravings/presentation/your_cravings/states/your_cravings_state
 class YourCravingsCubit extends BaseCubit<YourCravingsState> {
   final CravingsRepository _cravingsRepository;
 
-  YourCravingsCubit(this._cravingsRepository) : super(const YourCravingsState());
+  YourCravingsCubit(this._cravingsRepository) : super(const YourCravingsState.on());
 
   @override
   Future<void> init() async {

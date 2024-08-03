@@ -10,14 +10,15 @@ abstract final class KycDimens {
   static const double space8 = 20;
   static const double space9 = 24;
   static const double space10 = 32;
-  static const double space11 = 40;
-  static const double space12 = 48;
-  static const double space13 = 50;
-  static const double space14 = 64;
-  static const double space15 = 72;
-  static const double space16 = 80;
-  static const double space17 = 100;
-  static const double space18 = 187;
+  static const double space11 = 34;
+  static const double space12 = 40;
+  static const double space13 = 48;
+  static const double space14 = 50;
+  static const double space15 = 64;
+  static const double space16 = 72;
+  static const double space17 = 80;
+  static const double space18 = 100;
+  static const double space19 = 187;
 
   static const double font1 = 10;
   static const double font2 = 12;
@@ -57,4 +58,9 @@ abstract final class KycDimens {
   static const double predictRadiusSmall = 180;
 
   static const double tagHeight = 35;
+
+  static const double textFieldHeight = 45;
+
+  static const double paddingButtonNormal = 12;
+  static const double paddingButtonSmall = 6;
 }

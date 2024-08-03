@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kycravings/presentation/add_cravings/add_cravings_view.dart';
 import 'package:kycravings/presentation/core/base/view_cubit_mixin.dart';
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
@@ -25,9 +26,11 @@ class YourCravingsView extends StatelessWidget with ViewCubitMixin<YourCravingsC
         onLeadingIconClick: () => Navigator.of(context).pop(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your craving
-        },
+        onPressed: () async => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => AddCravingsView(),
+          ),
+        ),
         backgroundColor: KycColors.primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(KycDimens.radiusCircle),
@@ -40,7 +43,7 @@ class YourCravingsView extends StatelessWidget with ViewCubitMixin<YourCravingsC
             return Table(
               columnWidths: const {
                 0: FlexColumnWidth(1),
-                1: FixedColumnWidth(KycDimens.space14),
+                1: FixedColumnWidth(KycDimens.space15),
               },
               children: state.cravings
                   .map((craving) => CravingItemView.build(

@@ -1,0 +1,18 @@
+// Workspace-specific code snippets
+{
+    "Creates Freezed State": {
+        "prefix": "fs",
+        "body": [
+            "import 'package:freezed_annotation/freezed_annotation.dart';",
+            "",
+            "part '${TM_FILENAME_BASE}.freezed.dart';",
+            "",
+            "@freezed",
+            "class ${1}State with _$${1}State {",
+            "  const factory ${1}State.on({",
+            "  }) = _${1}State;",
+            "}",
+        ],
+        "description": "Creates Freezed State"
+    }
+}
