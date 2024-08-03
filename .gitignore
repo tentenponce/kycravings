@@ -34,6 +34,7 @@ migrate_working_dir/
 **/*.gen.dart
 **/*.g.dart
 **/*.config.dart
+**/*.freezed.dart
 
 # Symbolication related
 app.*.symbols
