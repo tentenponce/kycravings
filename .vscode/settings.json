@@ -2,11 +2,14 @@
     "dart.lineLength": 120,
     "files.exclude": {
         "build": true,
+        "**/*.g.dart": true,
         "**/*.config.dart": true,
         "**/generated_plugin_registrant.dart": true,
+        "**/*.mocks.dart": true,
         "**/Gemfile": true,
         "**/Gemfile.lock": true,
         "**/pubspec.lock": true,
+        "**/*.freezed.dart": true,
     }, // Causes the debug view to automatically appear when a breakpoint is hit. This
     // setting is global and not configurable per-language.
     "debug.openDebug": "openOnDebugBreak",

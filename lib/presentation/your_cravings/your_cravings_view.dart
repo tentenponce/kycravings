@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kycravings/presentation/core/base/view_cubit_mixin.dart';
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_dimens.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_app_bar.dart';
+import 'package:kycravings/presentation/your_cravings/cubits/your_cravings_cubit.dart';
+import 'package:kycravings/presentation/your_cravings/states/your_cravings_state.dart';
 import 'package:kycravings/presentation/your_cravings/subviews/craving_item_view.dart';
 
-class YourCravingsView extends StatelessWidget {
-  const YourCravingsView({super.key});
+class YourCravingsView extends StatelessWidget with ViewCubitMixin<YourCravingsCubit> {
+  YourCravingsView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildView(BuildContext context) {
     return Scaffold(
       backgroundColor: KycColors.white,
       appBar: KycAppBar(
@@ -31,24 +35,22 @@ class YourCravingsView extends StatelessWidget {
         child: const Icon(Icons.add, color: KycColors.white),
       ),
       body: SingleChildScrollView(
-        child: Table(
-          columnWidths: const {
-            0: FlexColumnWidth(1),
-            1: FixedColumnWidth(KycDimens.space14),
+        child: BlocBuilder<YourCravingsCubit, YourCravingsState>(
+          builder: (context, state) {
+            return Table(
+              columnWidths: const {
+                0: FlexColumnWidth(1),
+                1: FixedColumnWidth(KycDimens.space14),
+              },
+              children: state.cravings
+                  .map((craving) => CravingItemView.build(
+                        context,
+                        cravingName: craving.name,
+                        categories: craving.categories.map((category) => category.name),
+                      ))
+                  .toList(),
+            );
           },
-          children: [
-            // list of your cravings
-            CravingItemView.build(
-              context,
-              cravingName: 'Sinigang',
-              categories: ['Sabaw', 'Maasim', 'Pork'],
-            ),
-            CravingItemView.build(
-              context,
-              cravingName: 'Nilaga',
-              categories: ['Sabaw', 'Pork', 'Maalat'],
-            ),
-          ],
         ),
       ),
     );

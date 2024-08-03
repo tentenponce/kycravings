@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:kycravings/di/dependency_injection.dart';
 import 'package:kycravings/presentation/app/app.dart';
 
 void main() {
@@ -11,6 +12,7 @@ void main() {
       catchUnhandledExceptions(details.exception, details.stack);
     };
 
+    configureDependencies();
     runApp(const App());
   }, catchUnhandledExceptions);
 }

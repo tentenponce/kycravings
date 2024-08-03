@@ -42,6 +42,11 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
+
+        ndk {
+        // Filter for architectures supported by Flutter. https://docs.flutter.dev/add-to-app/android/project-setup
+        abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
+        }
     }
 
     buildTypes {

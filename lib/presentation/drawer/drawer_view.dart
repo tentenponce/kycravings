@@ -35,9 +35,9 @@ class DrawerView extends StatelessWidget {
               I18n.of(context).drawerCravings,
               style: KycTextStyles.textStyle3Reg(),
             ),
-            onTap: () => Navigator.of(context).push(
+            onTap: () async => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const YourCravingsView(),
+                builder: (context) => YourCravingsView(),
               ),
             ),
           ),
