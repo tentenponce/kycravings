@@ -5,7 +5,9 @@ import 'package:kycravings/data/db/tables/craving_category_table.dart';
 
 abstract interface class CravingCategoryRepository
     implements Repository<CravingCategoryTable, CravingCategoryTableData> {
-  Future<void> insertAll(Map<int, int> cravingCategoryMap);
+  Future<void> insertAll(Iterable<(int, int)> cravingCategoryMap);
+  Future<int> deleteByCravingId(int cravingId);
+  Future<int> deleteByCategoryId(int categoryId);
 }
 
 @LazySingleton(as: CravingCategoryRepository)
@@ -15,14 +17,24 @@ class CravingCategoryRepositoryImpl
   CravingCategoryRepositoryImpl(super.attachedDatabase);
 
   @override
-  Future<void> insertAll(Map<int, int> cravingCategoryMap) {
+  Future<void> insertAll(Iterable<(int, int)> cravingCategoryMap) {
     return batch((batch) {
-      batch.insertAll(table, cravingCategoryMap.entries.map((entry) {
+      batch.insertAll(table, cravingCategoryMap.map((entry) {
         return CravingCategoryTableData(
-          cravingId: entry.key,
-          categoryId: entry.value,
+          cravingId: entry.$1,
+          categoryId: entry.$2,
         );
       }));
     });
+  }
+
+  @override
+  Future<int> deleteByCravingId(int cravingId) {
+    return (delete(table)..where((t) => t.cravingId.equals(cravingId))).go();
+  }
+
+  @override
+  Future<int> deleteByCategoryId(int categoryId) {
+    return (delete(table)..where((t) => t.categoryId.equals(categoryId))).go();
   }
 }

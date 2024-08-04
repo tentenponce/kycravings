@@ -14,6 +14,7 @@ abstract interface class CravingsRepository implements Repository<CravingTable, 
 
   /// get craving without categories
   Future<CravingModel?> getCravingByName(String cravingName);
+  void remove(int id);
 }
 
 @LazySingleton(as: CravingsRepository)
@@ -44,9 +45,13 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
 
     _logger.log(LogLevel.debug, 'successful inserted craving $cravingName with id $id');
 
-    await _cravingCategoryRepository.insertAll(Map.fromEntries(categories.map((category) {
-      return MapEntry(id, category.id);
-    })));
+    final cravingCategoryMap = categories.map((category) {
+      return (id, category.id);
+    });
+
+    _logger.log(LogLevel.debug, 'inserting categories $cravingCategoryMap for craving $cravingName');
+
+    await _cravingCategoryRepository.insertAll(cravingCategoryMap);
 
     _logger.log(LogLevel.debug, 'successful inserted categories for craving $cravingName');
 
@@ -101,5 +106,11 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
     }
 
     return CravingModel(id: result.id, name: result.name, categories: const []);
+  }
+
+  @override
+  Future<int> remove(int id) async {
+    await _cravingCategoryRepository.deleteByCravingId(id);
+    return (delete(table)..where((t) => t.id.equals(id))).go();
   }
 }

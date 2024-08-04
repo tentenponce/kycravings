@@ -9,11 +9,13 @@ abstract final class CravingItemView {
     BuildContext context, {
     required String cravingName,
     Iterable<String>? categories,
+    VoidCallback? onItemClick,
+    VoidCallback? onDeleteClick,
   }) {
     return TableRow(
       children: [
         InkWell(
-          onTap: () => {},
+          onTap: onItemClick,
           child: Container(
             padding: const EdgeInsets.symmetric(
               vertical: KycDimens.space5,
@@ -46,7 +48,7 @@ abstract final class CravingItemView {
         TableCell(
           verticalAlignment: TableCellVerticalAlignment.fill,
           child: InkWell(
-            onTap: () => {},
+            onTap: onDeleteClick,
             child: const Icon(Icons.delete, color: KycColors.red),
           ),
         ),

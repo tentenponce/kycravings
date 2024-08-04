@@ -10,6 +10,8 @@
     "drawerHistory": "Cravings History",
     "drawerAbout": "About",
     "yourCravingsTitle": "Your Cravings",
+    "yourCravingsDeleteDialogTitle": "Delete Craving",
+    "yourCravingsDeleteDialogMessage": "Are you sure you will not crave for {cravingName} again?",
     "addCravingsHint": "Put your food craving here",
     "addCravingsErrorEmpty": "Cannot add empty text craving.",
     "addCravingsErrorDuplicate": "{cravingName} already exists.",

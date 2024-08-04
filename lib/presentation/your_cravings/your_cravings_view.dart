@@ -5,6 +5,7 @@ import 'package:kycravings/presentation/core/base/view_cubit_mixin.dart';
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_dimens.dart';
+import 'package:kycravings/presentation/shared/utils/dialog_utils.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_app_bar.dart';
 import 'package:kycravings/presentation/your_cravings/cubits/your_cravings_cubit.dart';
 import 'package:kycravings/presentation/your_cravings/states/your_cravings_state.dart';
@@ -45,7 +46,7 @@ class YourCravingsView extends StatelessWidget with ViewCubitMixin<YourCravingsC
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: KycDimens.space12),
+          padding: const EdgeInsets.symmetric(vertical: KycDimens.space6),
           child: BlocBuilder<YourCravingsCubit, YourCravingsState>(
             builder: (context, state) {
               return Table(
@@ -58,6 +59,16 @@ class YourCravingsView extends StatelessWidget with ViewCubitMixin<YourCravingsC
                           context,
                           cravingName: craving.name,
                           categories: craving.categories.map((category) => category.name),
+                          onItemClick: () async => cubit.onCravingClick(craving),
+                          onDeleteClick: () async => DialogUtils.showConfirmDialog(
+                            context: context,
+                            title: I18n.of(context).yourCravingsDeleteDialogTitle,
+                            message: I18n.of(context).yourCravingsDeleteDialogMessage(craving.name),
+                            onOk: () {
+                              cubit.onCravingDelete(craving.id);
+                              Navigator.pop(context);
+                            },
+                          ),
                         ))
                     .toList(),
               );
