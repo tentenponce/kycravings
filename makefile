@@ -3,3 +3,9 @@ codegen:
 
 codeformat:
 	flutter analyze .
+
+codecov:
+	flutter test --coverage
+	lcov --remove coverage/lcov.info 'lib/data/*' 'lib/domain/models/*' 'lib/core/*' -o coverage/lcov.info
+	genhtml coverage/lcov.info -o coverage/html
+	open coverage/html/index.html

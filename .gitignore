@@ -35,6 +35,12 @@ migrate_working_dir/
 **/*.g.dart
 **/*.config.dart
 **/*.freezed.dart
+**/*.mocks.dart
+
+# Test related
+coverage
+coverage.xml
+lcov.info
 
 # Symbolication related
 app.*.symbols

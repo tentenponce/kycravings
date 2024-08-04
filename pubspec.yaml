@@ -36,6 +36,7 @@ dev_dependencies:
     sdk: flutter
   freezed: ^2.5.2
   injectable_generator: ^2.6.2
+  mockito: ^5.4.4
 
 flutter:
   uses-material-design: true

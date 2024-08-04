@@ -14,5 +14,26 @@
             "}",
         ],
         "description": "Creates Freezed State"
+    },"Create test group": {
+        "prefix": "gtest",
+        "body": [
+            "import 'package:flutter_test/flutter_test.dart';",
+            "",
+            "void main() {",
+            "  group(${UnitToTest}, () {",
+            "",
+            "\tsetUp(() {",
+            "\t});",
+            "",
+            "\t${UnitToTest} createUnitToTest() {",
+            "\t  return ${UnitToTest}();",
+            "\t}",
+            "",
+            "\ttest('should what', () {",
+            "\t  final unit = createUnitToTest();",
+            "\t});",
+            "  });",
+            "}"
+        ]
     }
 }
