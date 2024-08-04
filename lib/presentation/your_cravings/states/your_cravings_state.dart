@@ -5,7 +5,7 @@ part 'your_cravings_state.freezed.dart';
 
 @freezed
 class YourCravingsState with _$YourCravingsState {
-  const factory YourCravingsState({
+  const factory YourCravingsState.on({
     @Default([]) List<CravingModel> cravings,
   }) = _YourCravingsState;
 }

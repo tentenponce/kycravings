@@ -43,6 +43,13 @@ class DrawerView extends StatelessWidget {
           ),
           ListTile(
             title: Text(
+              I18n.of(context).drawerCategory,
+              style: KycTextStyles.textStyle3Reg(),
+            ),
+            onTap: () => {},
+          ),
+          ListTile(
+            title: Text(
               I18n.of(context).drawerHistory,
               style: KycTextStyles.textStyle3Reg(),
             ),

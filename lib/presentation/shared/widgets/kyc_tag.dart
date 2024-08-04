@@ -8,18 +8,21 @@ class KycTag extends StatelessWidget {
     required this.label,
     required this.isSelected,
     this.onPressed,
+    this.onLongPress,
     super.key,
   });
 
   final String label;
   final bool isSelected;
   final VoidCallback? onPressed;
+  final VoidCallback? onLongPress;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: KycDimens.tagHeight,
       child: OutlinedButton(
+        onLongPress: onLongPress,
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: KycDimens.space7, vertical: 0),

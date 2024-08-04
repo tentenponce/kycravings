@@ -1,0 +1,39 @@
+// Workspace-specific code snippets
+{
+    "Creates Freezed State": {
+        "prefix": "fs",
+        "body": [
+            "import 'package:freezed_annotation/freezed_annotation.dart';",
+            "",
+            "part '${TM_FILENAME_BASE}.freezed.dart';",
+            "",
+            "@freezed",
+            "class ${1}State with _$${1}State {",
+            "  const factory ${1}State.on({",
+            "  }) = _${1}State;",
+            "}",
+        ],
+        "description": "Creates Freezed State"
+    },"Create test group": {
+        "prefix": "gtest",
+        "body": [
+            "import 'package:flutter_test/flutter_test.dart';",
+            "",
+            "void main() {",
+            "  group(${UnitToTest}, () {",
+            "",
+            "\tsetUp(() {",
+            "\t});",
+            "",
+            "\t${UnitToTest} createUnitToTest() {",
+            "\t  return ${UnitToTest}();",
+            "\t}",
+            "",
+            "\ttest('should what', () {",
+            "\t  final unit = createUnitToTest();",
+            "\t});",
+            "  });",
+            "}"
+        ]
+    }
+}
