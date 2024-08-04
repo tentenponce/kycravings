@@ -14,6 +14,8 @@ abstract interface class CravingsRepository implements Repository<CravingTable, 
 
   /// get craving without categories
   Future<CravingModel?> getCravingByName(String cravingName);
+
+  /// remove craving and its categories on craving category junction table
   void remove(int id);
 }
 

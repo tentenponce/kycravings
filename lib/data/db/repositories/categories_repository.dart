@@ -9,6 +9,8 @@ import 'package:kycravings/domain/models/category_model.dart';
 abstract interface class CategoriesRepository implements Repository<CategoryTable, CategoryTableData> {
   Future<List<CategoryModel>> selectAll();
   Future<CategoryModel> insert(String categoryName);
+
+  /// remove categories from cravings and then remove the category
   void remove(int id);
 }
 
