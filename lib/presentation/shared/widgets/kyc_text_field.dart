@@ -6,7 +6,6 @@ class KycTextField extends StatelessWidget {
   const KycTextField({
     super.key,
     String? label,
-    // any number you need (It works as the rows for the textarea)
     int maxLines = 1,
     TextInputType? keyboardType,
     ValueChanged<String>? onChanged,

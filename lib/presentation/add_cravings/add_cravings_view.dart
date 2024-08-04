@@ -54,6 +54,7 @@ class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCub
               KycTextField(
                 label: I18n.of(context).addCravingsHint,
                 controller: _cravingController,
+                onChanged: cubit.onCravingChanged,
               ),
               const SizedBox(height: KycDimens.space3),
               BlocBuilder<AddCravingsCubit, AddCravingsState>(builder: (context, state) {

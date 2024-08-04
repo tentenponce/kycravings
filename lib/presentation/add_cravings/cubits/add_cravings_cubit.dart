@@ -11,16 +11,16 @@ import 'package:kycravings/presentation/shared/utils/string_utils.dart';
 class AddCravingsCubit extends BaseCubit<AddCravingsState> {
   final CravingsRepository _cravingsRepository;
   final CategoriesRepository _categoriesRepository;
-  final DebouncerUtils _debouncerUtil;
+  final DebouncerUtils _debouncerUtils;
   AddCravingsCubit(
     this._cravingsRepository,
     this._categoriesRepository,
-    this._debouncerUtil,
+    this._debouncerUtils,
   ) : super(const AddCravingsState.on());
 
   @override
   Future<void> init() async {
-    _debouncerUtil.setMilliseconds(500);
+    _debouncerUtils.setMilliseconds(500);
 
     final categories = await _categoriesRepository.selectAll();
     emit(state.copyWith(categories: categories));
@@ -36,7 +36,7 @@ class AddCravingsCubit extends BaseCubit<AddCravingsState> {
   }
 
   void onCravingChanged(String cravingName) {
-    _debouncerUtil.run(() async => _isValidCraving(cravingName));
+    _debouncerUtils.run(() async => _isValidCraving(cravingName));
   }
 
   void onCategoryClick(int categoryId) {
