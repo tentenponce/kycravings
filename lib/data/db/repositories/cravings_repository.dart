@@ -9,11 +9,12 @@ import 'package:kycravings/domain/models/category_model.dart';
 import 'package:kycravings/domain/models/craving_model.dart';
 
 abstract interface class CravingsRepository implements Repository<CravingTable, CravingTableData> {
-  Future<CravingModel> insert(String cravingName, Iterable<CategoryModel> categories);
   Future<List<CravingModel>> selectWithCategories();
 
   /// get craving without categories
   Future<CravingModel?> getCravingByName(String cravingName);
+  Future<CravingModel> insert(String cravingName, Iterable<CategoryModel> categories);
+  Future<void> replace(CravingModel updatedCravingModel);
 
   /// remove craving and its categories on craving category junction table
   void remove(int id);
@@ -31,39 +32,6 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
     super.attachedDatabase,
   ) {
     _logger.logFor(this);
-  }
-
-  @override
-  Future<CravingModel> insert(String cravingName, Iterable<CategoryModel> categories) async {
-    _logger.log(
-      LogLevel.debug,
-      'inserting craving $cravingName with categories ${categories.map((category) => category.name)}',
-    );
-    final addedCravingData = await into(table).insertReturning(
-      CravingTableCompanion(
-        name: Value(cravingName),
-      ),
-    );
-
-    _logger.log(LogLevel.debug, 'successful inserted craving $addedCravingData');
-
-    final cravingCategoryMap = categories.map((category) {
-      return (addedCravingData.id, category.id);
-    });
-
-    _logger.log(LogLevel.debug, 'inserting categories $cravingCategoryMap for craving $cravingName');
-
-    await _cravingCategoryRepository.insertAll(cravingCategoryMap);
-
-    _logger.log(LogLevel.debug, 'successful inserted categories for craving $cravingName');
-
-    return CravingModel(
-      id: addedCravingData.id,
-      name: cravingName,
-      categories: categories,
-      createdAt: addedCravingData.createdAt,
-      updatedAt: addedCravingData.updatedAt,
-    );
   }
 
   @override
@@ -137,6 +105,65 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
       createdAt: result.createdAt,
       updatedAt: result.updatedAt,
     );
+  }
+
+  @override
+  Future<CravingModel> insert(String cravingName, Iterable<CategoryModel> categories) async {
+    _logger.log(
+      LogLevel.debug,
+      'inserting craving $cravingName with categories ${categories.map((category) => category.name)}',
+    );
+    final addedCravingData = await into(table).insertReturning(
+      CravingTableCompanion(
+        name: Value(cravingName),
+      ),
+    );
+
+    _logger.log(LogLevel.debug, 'successful inserted craving $addedCravingData');
+
+    final cravingCategoryMap = categories.map((category) {
+      return (addedCravingData.id, category.id);
+    });
+
+    _logger.log(LogLevel.debug, 'inserting categories $cravingCategoryMap for craving $cravingName');
+
+    await _cravingCategoryRepository.insertAll(cravingCategoryMap);
+
+    _logger.log(LogLevel.debug, 'successful inserted categories for craving $cravingName');
+
+    return CravingModel(
+      id: addedCravingData.id,
+      name: cravingName,
+      categories: categories,
+      createdAt: addedCravingData.createdAt,
+      updatedAt: addedCravingData.updatedAt,
+    );
+  }
+
+  @override
+  Future<void> replace(CravingModel updatedCravingModel) async {
+    // delete all categories for the craving first
+    await _cravingCategoryRepository.deleteByCravingId(updatedCravingModel.id);
+
+    // then re-add it again with the new list of categories
+    final cravingCategoryMap = updatedCravingModel.categories.map((category) {
+      return (updatedCravingModel.id, category.id);
+    });
+
+    await _cravingCategoryRepository.insertAll(cravingCategoryMap);
+
+    final isSuccess = await update(table).replace(
+      CravingTableData(
+        id: updatedCravingModel.id,
+        name: updatedCravingModel.name,
+        createdAt: updatedCravingModel.createdAt,
+        updatedAt: updatedCravingModel.updatedAt,
+      ),
+    );
+
+    if (!isSuccess) {
+      throw InvalidDataException('Failed to update craving $updatedCravingModel');
+    }
   }
 
   @override

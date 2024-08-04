@@ -8,8 +8,13 @@ mixin ViewCubitMixin<TCubit extends BaseCubit<dynamic>> on StatelessWidget {
 
   Widget buildView(BuildContext context);
 
+  Object? get arguments => cubit.arguments;
+
   @override
   Widget build(BuildContext context) {
+    final arguments = ModalRoute.of(context)!.settings.arguments;
+    cubit.arguments = arguments;
+
     return BlocProvider(
       create: (_) => cubit,
       child: buildView(context),

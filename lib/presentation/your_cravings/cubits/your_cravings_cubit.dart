@@ -1,6 +1,5 @@
 import 'package:injectable/injectable.dart';
 import 'package:kycravings/data/db/repositories/cravings_repository.dart';
-import 'package:kycravings/domain/models/craving_model.dart';
 import 'package:kycravings/presentation/core/base/base_cubit.dart';
 import 'package:kycravings/presentation/your_cravings/states/your_cravings_state.dart';
 
@@ -18,10 +17,6 @@ class YourCravingsCubit extends BaseCubit<YourCravingsState> {
   Future<void> getCravings() async {
     final cravings = await _cravingsRepository.selectWithCategories();
     emit(state.copyWith(cravings: cravings));
-  }
-
-  Future<void> onCravingClick(CravingModel cravingModel) async {
-    // TODO
   }
 
   void onCravingDelete(int cravingId) {

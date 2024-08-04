@@ -67,7 +67,7 @@ void main() {
     });
 
     test('addCraving should emit CravingError.duplicate if craving already exists', () async {
-      when(mockCravingsRepository.getCravingByName('sample craving name')).thenAnswer((_) async => CravingModel.empty);
+      when(mockCravingsRepository.getCravingByName('sample craving name')).thenAnswer((_) async => CravingModel.test);
 
       final unit = createUnitToTest();
 
@@ -106,7 +106,7 @@ void main() {
     });
 
     test('onCravingChanged should emit CravingError.duplicate if craving already exists', () async {
-      when(mockCravingsRepository.getCravingByName('sample craving name')).thenAnswer((_) async => CravingModel.empty);
+      when(mockCravingsRepository.getCravingByName('sample craving name')).thenAnswer((_) async => CravingModel.test);
 
       final unit = createUnitToTest();
 
