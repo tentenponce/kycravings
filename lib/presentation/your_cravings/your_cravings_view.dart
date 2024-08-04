@@ -57,8 +57,7 @@ class YourCravingsView extends StatelessWidget with ViewCubitMixin<YourCravingsC
                 children: state.cravings
                     .map((craving) => CravingItemView.build(
                           context,
-                          cravingName: craving.name,
-                          categories: craving.categories.map((category) => category.name),
+                          cravingModel: craving,
                           onItemClick: () async => cubit.onCravingClick(craving),
                           onDeleteClick: () async => DialogUtils.showConfirmDialog(
                             context: context,

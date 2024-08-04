@@ -37,16 +37,16 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
       LogLevel.debug,
       'inserting craving $cravingName with categories ${categories.map((category) => category.name)}',
     );
-    final id = await into(table).insert(
+    final addedCravingData = await into(table).insertReturning(
       CravingTableCompanion(
         name: Value(cravingName),
       ),
     );
 
-    _logger.log(LogLevel.debug, 'successful inserted craving $cravingName with id $id');
+    _logger.log(LogLevel.debug, 'successful inserted craving $addedCravingData');
 
     final cravingCategoryMap = categories.map((category) {
-      return (id, category.id);
+      return (addedCravingData.id, category.id);
     });
 
     _logger.log(LogLevel.debug, 'inserting categories $cravingCategoryMap for craving $cravingName');
@@ -56,9 +56,11 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
     _logger.log(LogLevel.debug, 'successful inserted categories for craving $cravingName');
 
     return CravingModel(
-      id: id,
+      id: addedCravingData.id,
       name: cravingName,
       categories: categories,
+      createdAt: addedCravingData.createdAt,
+      updatedAt: addedCravingData.updatedAt,
     );
   }
 
@@ -67,8 +69,12 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
     const customQuery = 'SELECT '
         'craving_table.id as craving_id, '
         'craving_table.name as craving_name, '
+        'craving_table.created_at as craving_created_at, '
+        'craving_table.updated_at as craving_updated_at, '
         'category_table.id as category_id, '
-        'category_table.name as category_name '
+        'category_table.name as category_name, '
+        'category_table.created_at as category_created_at, '
+        'category_table.updated_at as category_updated_at '
         'FROM craving_category_table '
         'LEFT JOIN craving_table ON craving_category_table.craving_id=craving_table.id '
         'LEFT JOIN category_table ON craving_category_table.category_id=category_table.id';
@@ -85,15 +91,31 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
       }).map((result) {
         final categoryId = result.read<int>('category_id');
         final categoryName = result.read<String>('category_name');
-        return CategoryModel(id: categoryId, name: categoryName);
+        final categoryCreatedAt = result.read<DateTime>('category_created_at');
+        final categoryUpdatedAt = result.read<DateTime>('category_updated_at');
+        return CategoryModel(
+          id: categoryId,
+          name: categoryName,
+          createdAt: categoryCreatedAt,
+          updatedAt: categoryUpdatedAt,
+        );
       });
 
       // get name of the craving ID
-      final cravingName = results.firstWhere((result) {
+      final cravingResult = results.firstWhere((result) {
         return result.read<int>('craving_id') == cravingId;
-      }).read<String>('craving_name');
+      });
+      final cravingName = cravingResult.read<String>('craving_name');
+      final cravingCreatedAt = cravingResult.read<DateTime>('craving_created_at');
+      final cravingUpdatedAt = cravingResult.read<DateTime>('craving_updated_at');
 
-      return CravingModel(id: cravingId, name: cravingName, categories: categories);
+      return CravingModel(
+        id: cravingId,
+        name: cravingName,
+        categories: categories,
+        createdAt: cravingCreatedAt,
+        updatedAt: cravingUpdatedAt,
+      );
     }).toList();
   }
 
@@ -105,7 +127,13 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
       return null;
     }
 
-    return CravingModel(id: result.id, name: result.name, categories: const []);
+    return CravingModel(
+      id: result.id,
+      name: result.name,
+      categories: const [],
+      createdAt: result.createdAt,
+      updatedAt: result.updatedAt,
+    );
   }
 
   @override

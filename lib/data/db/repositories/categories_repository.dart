@@ -9,7 +9,6 @@ import 'package:kycravings/domain/models/category_model.dart';
 abstract interface class CategoriesRepository implements Repository<CategoryTable, CategoryTableData> {
   Future<List<CategoryModel>> selectAll();
   Future<CategoryModel> insert(String categoryName);
-  Future<void> replace(CategoryModel category);
   void remove(int id);
 }
 
@@ -31,30 +30,26 @@ class CategoriesRepositoryImpl extends BaseRepository<CravingsDatabase, Category
         .map((categoryData) => CategoryModel(
               id: categoryData.id,
               name: categoryData.name,
+              createdAt: categoryData.createdAt,
+              updatedAt: categoryData.updatedAt,
             ))
         .toList();
   }
 
   @override
   Future<CategoryModel> insert(String categoryName) async {
-    final id = await into(table).insert(
+    final addedCategoryData = await into(table).insertReturning(
       CategoryTableCompanion(
         name: Value(categoryName),
       ),
     );
 
     return CategoryModel(
-      id: id,
+      id: addedCategoryData.id,
       name: categoryName,
+      createdAt: addedCategoryData.createdAt,
+      updatedAt: addedCategoryData.updatedAt,
     );
-  }
-
-  @override
-  Future<void> replace(CategoryModel category) {
-    return update(table).replace(CategoryTableData(
-      id: category.id,
-      name: category.name,
-    ));
   }
 
   @override

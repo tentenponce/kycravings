@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kycravings/data/db/core/repository.dart';
 import 'package:kycravings/data/db/cravings_database.dart';
@@ -20,9 +21,9 @@ class CravingCategoryRepositoryImpl
   Future<void> insertAll(Iterable<(int, int)> cravingCategoryMap) {
     return batch((batch) {
       batch.insertAll(table, cravingCategoryMap.map((entry) {
-        return CravingCategoryTableData(
-          cravingId: entry.$1,
-          categoryId: entry.$2,
+        return CravingCategoryTableCompanion(
+          cravingId: Value(entry.$1),
+          categoryId: Value(entry.$2),
         );
       }));
     });

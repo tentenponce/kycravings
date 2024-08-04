@@ -5,11 +5,15 @@ class CravingModel extends Equatable {
   final int id;
   final String name;
   final Iterable<CategoryModel> categories;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   const CravingModel({
     required this.id,
     required this.name,
     required this.categories,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   @override
@@ -17,5 +21,7 @@ class CravingModel extends Equatable {
         id,
         name,
         categories,
+        createdAt,
+        updatedAt,
       ];
 }

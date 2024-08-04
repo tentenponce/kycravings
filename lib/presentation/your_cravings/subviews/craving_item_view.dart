@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:kycravings/domain/models/craving_model.dart';
+import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_dimens.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_text_styles.dart';
+import 'package:kycravings/presentation/shared/utils/date_time_utils.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_tag.dart';
 
 abstract final class CravingItemView {
   static TableRow build(
     BuildContext context, {
-    required String cravingName,
-    Iterable<String>? categories,
+    required CravingModel cravingModel,
     VoidCallback? onItemClick,
     VoidCallback? onDeleteClick,
   }) {
@@ -25,7 +27,7 @@ abstract final class CravingItemView {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  cravingName,
+                  cravingModel.name,
                   style: KycTextStyles.textStyle3Bold(),
                 ),
                 const SizedBox(height: KycDimens.space3),
@@ -33,12 +35,14 @@ abstract final class CravingItemView {
                   child: Wrap(
                     spacing: KycDimens.space2,
                     runSpacing: KycDimens.space2,
-                    children: (categories ?? []).map((category) => KycTag(label: category, isSelected: false)).toList(),
+                    children: cravingModel.categories
+                        .map((category) => KycTag(label: category.name, isSelected: false))
+                        .toList(),
                   ),
                 ),
                 const SizedBox(height: KycDimens.space3),
                 Text(
-                  'Updated 4 days ago',
+                  I18n.of(context).yourCravingsDateMessage(DateTimeUtils.ago(cravingModel.updatedAt)),
                   style: KycTextStyles.textStyle5Reg(),
                 ),
               ],

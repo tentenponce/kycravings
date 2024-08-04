@@ -8,10 +8,14 @@ class CategoryModel extends Equatable {
   final int id;
   final String name;
   final bool? isSelected;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   const CategoryModel({
     required this.id,
     required this.name,
+    required this.createdAt,
+    required this.updatedAt,
     this.isSelected,
   });
 
@@ -20,5 +24,7 @@ class CategoryModel extends Equatable {
         id,
         name,
         isSelected,
+        createdAt,
+        updatedAt,
       ];
 }
