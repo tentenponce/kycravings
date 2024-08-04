@@ -17,8 +17,8 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       key: _scaffoldKey,
-      backgroundColor: KycColors.white,
       drawer: const DrawerView(),
       appBar: KycAppBar(
         title: I18n.of(context).appName,

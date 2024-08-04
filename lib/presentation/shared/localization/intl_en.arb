@@ -11,6 +11,8 @@
     "drawerAbout": "About",
     "yourCravingsTitle": "Your Cravings",
     "addCravingsHint": "Put your food craving here",
+    "addCravingsErrorEmpty": "Cannot add empty text craving.",
+    "addCravingsErrorDuplicate": "{cravingName} already exists.",
     "addCravingsCategoryListTitle": "Click to select your craving categories below:",
     "addCravingsCategoryListMessage": "Long press a category to delete it.",
     "addCravingsCategoryButton": "Add Category +",

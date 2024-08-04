@@ -26,11 +26,17 @@ class YourCravingsView extends StatelessWidget with ViewCubitMixin<YourCravingsC
         onLeadingIconClick: () => Navigator.of(context).pop(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => AddCravingsView(),
-          ),
-        ),
+        onPressed: () async {
+          final isAdded = await Navigator.of(context).push(
+            MaterialPageRoute<bool?>(
+              builder: (context) => AddCravingsView(),
+            ),
+          );
+
+          if (isAdded ?? false) {
+            await cubit.getCravings();
+          }
+        },
         backgroundColor: KycColors.primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(KycDimens.radiusCircle),
@@ -38,22 +44,25 @@ class YourCravingsView extends StatelessWidget with ViewCubitMixin<YourCravingsC
         child: const Icon(Icons.add, color: KycColors.white),
       ),
       body: SingleChildScrollView(
-        child: BlocBuilder<YourCravingsCubit, YourCravingsState>(
-          builder: (context, state) {
-            return Table(
-              columnWidths: const {
-                0: FlexColumnWidth(1),
-                1: FixedColumnWidth(KycDimens.space15),
-              },
-              children: state.cravings
-                  .map((craving) => CravingItemView.build(
-                        context,
-                        cravingName: craving.name,
-                        categories: craving.categories.map((category) => category.name),
-                      ))
-                  .toList(),
-            );
-          },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: KycDimens.space12),
+          child: BlocBuilder<YourCravingsCubit, YourCravingsState>(
+            builder: (context, state) {
+              return Table(
+                columnWidths: const {
+                  0: FlexColumnWidth(1),
+                  1: FixedColumnWidth(KycDimens.space15),
+                },
+                children: state.cravings
+                    .map((craving) => CravingItemView.build(
+                          context,
+                          cravingName: craving.name,
+                          categories: craving.categories.map((category) => category.name),
+                        ))
+                    .toList(),
+              );
+            },
+          ),
         ),
       ),
     );

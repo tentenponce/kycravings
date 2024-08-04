@@ -9,10 +9,17 @@ enum CategoryError {
   none,
 }
 
+enum CravingError {
+  empty,
+  duplicate,
+  none,
+}
+
 @freezed
 class AddCravingsState with _$AddCravingsState {
   const factory AddCravingsState.on({
     @Default(CategoryError.none) CategoryError categoryError,
+    @Default(CravingError.none) CravingError cravingError,
     @Default([]) Iterable<CategoryModel> categories,
   }) = _AddCravingsState;
 }

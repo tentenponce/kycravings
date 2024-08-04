@@ -1,18 +1,61 @@
+import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
+import 'package:kycravings/core/logging/logger.dart';
 import 'package:kycravings/data/db/core/repository.dart';
 import 'package:kycravings/data/db/cravings_database.dart';
+import 'package:kycravings/data/db/repositories/craving_category_repository.dart';
 import 'package:kycravings/data/db/tables/craving_table.dart';
 import 'package:kycravings/domain/models/category_model.dart';
 import 'package:kycravings/domain/models/craving_model.dart';
 
 abstract interface class CravingsRepository implements Repository<CravingTable, CravingTableData> {
+  Future<CravingModel> insert(String cravingName, Iterable<CategoryModel> categories);
   Future<List<CravingModel>> selectWithCategories();
+
+  /// get craving without categories
+  Future<CravingModel?> getCravingByName(String cravingName);
 }
 
 @LazySingleton(as: CravingsRepository)
 class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTable, CravingTableData>
     implements CravingsRepository {
-  CravingsRepositoryImpl(super.attachedDatabase);
+  final Logger _logger;
+  final CravingCategoryRepository _cravingCategoryRepository;
+
+  CravingsRepositoryImpl(
+    this._logger,
+    this._cravingCategoryRepository,
+    super.attachedDatabase,
+  ) {
+    _logger.logFor(this);
+  }
+
+  @override
+  Future<CravingModel> insert(String cravingName, Iterable<CategoryModel> categories) async {
+    _logger.log(
+      LogLevel.debug,
+      'inserting craving $cravingName with categories ${categories.map((category) => category.name)}',
+    );
+    final id = await into(table).insert(
+      CravingTableCompanion(
+        name: Value(cravingName),
+      ),
+    );
+
+    _logger.log(LogLevel.debug, 'successful inserted craving $cravingName with id $id');
+
+    await _cravingCategoryRepository.insertAll(Map.fromEntries(categories.map((category) {
+      return MapEntry(id, category.id);
+    })));
+
+    _logger.log(LogLevel.debug, 'successful inserted categories for craving $cravingName');
+
+    return CravingModel(
+      id: id,
+      name: cravingName,
+      categories: categories,
+    );
+  }
 
   @override
   Future<List<CravingModel>> selectWithCategories() async {
@@ -47,5 +90,16 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
 
       return CravingModel(id: cravingId, name: cravingName, categories: categories);
     }).toList();
+  }
+
+  @override
+  Future<CravingModel?> getCravingByName(String cravingName) async {
+    final result = await (select(table)..where((tbl) => tbl.name.like(cravingName))).getSingleOrNull();
+
+    if (result == null) {
+      return null;
+    }
+
+    return CravingModel(id: result.id, name: result.name, categories: const []);
   }
 }

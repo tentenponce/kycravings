@@ -34,6 +34,11 @@ abstract final class CravingItemView {
                     children: (categories ?? []).map((category) => KycTag(label: category, isSelected: false)).toList(),
                   ),
                 ),
+                const SizedBox(height: KycDimens.space3),
+                Text(
+                  'Updated 4 days ago',
+                  style: KycTextStyles.textStyle5Reg(),
+                ),
               ],
             ),
           ),

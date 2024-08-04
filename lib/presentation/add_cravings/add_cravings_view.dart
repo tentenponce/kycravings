@@ -15,6 +15,7 @@ import 'package:kycravings/presentation/shared/widgets/kyc_text_field.dart';
 class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCubit> {
   AddCravingsView({super.key});
 
+  final TextEditingController _cravingController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
 
   @override
@@ -30,7 +31,11 @@ class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCub
         onLeadingIconClick: () => Navigator.of(context).pop(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: cubit.add,
+        onPressed: () async {
+          if (await cubit.addCraving(_cravingController.text) && context.mounted) {
+            Navigator.pop(context, true);
+          }
+        },
         backgroundColor: KycColors.primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(KycDimens.radiusCircle),
@@ -48,8 +53,20 @@ class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCub
             children: [
               KycTextField(
                 label: I18n.of(context).addCravingsHint,
+                controller: _cravingController,
               ),
-              const SizedBox(height: KycDimens.space10),
+              const SizedBox(height: KycDimens.space3),
+              BlocBuilder<AddCravingsCubit, AddCravingsState>(builder: (context, state) {
+                return Text(
+                  switch (state.cravingError) {
+                    CravingError.empty => I18n.of(context).addCravingsErrorEmpty,
+                    CravingError.duplicate => I18n.of(context).addCravingsErrorDuplicate(_cravingController.text),
+                    CravingError.none => '',
+                  },
+                  style: KycTextStyles.textStyle5Reg().copyWith(color: KycColors.red),
+                );
+              }),
+              const SizedBox(height: KycDimens.space7),
               Text(
                 I18n.of(context).addCravingsCategoryListTitle,
                 style: KycTextStyles.textStyle5Reg(),
@@ -64,7 +81,8 @@ class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCub
                       .map(
                         (category) => KycTag(
                           label: category.name,
-                          isSelected: false,
+                          isSelected: category.isSelected ?? false,
+                          onPressed: () => cubit.onCategoryClick(category.id),
                           onLongPress: () async => DialogUtils.showConfirmDialog(
                             context: context,
                             title: I18n.of(context).addCravingsCategoryDeleteDialogTitle,
