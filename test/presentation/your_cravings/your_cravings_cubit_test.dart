@@ -35,7 +35,7 @@ void main() {
       await unit.getCravings();
 
       verify(mockCravingsRepository.selectWithCategories()).called(2);
-      await expectLater(unit.state.cravings, mockCravings);
+      expect(unit.state.cravings, mockCravings);
     });
 
     test('onCravingDelete should delete craving and remove from state', () async {
@@ -52,7 +52,7 @@ void main() {
       unit.onCravingDelete(cravingIdToDelete);
 
       verify(mockCravingsRepository.remove(cravingIdToDelete)).called(1);
-      await expectLater(unit.state.cravings, mockCravings..remove(mockCravings[1]));
+      expect(unit.state.cravings, mockCravings..remove(mockCravings[1]));
     });
   });
 }

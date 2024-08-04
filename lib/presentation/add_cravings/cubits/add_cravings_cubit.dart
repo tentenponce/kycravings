@@ -74,18 +74,19 @@ class AddCravingsCubit extends BaseCubit<AddCravingsState> {
   }
 
   Future<bool> _isValidCraving(String cravingName) async {
-    final sameCraving = await _cravingsRepository.getCravingByName(cravingName);
-
     if (StringUtils.isNullOrEmpty(cravingName)) {
       emit(state.copyWith(cravingError: CravingError.empty));
       return false;
-    } else if (sameCraving != null) {
+    }
+
+    final sameCraving = await _cravingsRepository.getCravingByName(cravingName);
+    if (sameCraving != null) {
       emit(state.copyWith(cravingError: CravingError.duplicate));
       return false;
-    } else {
-      emit(state.copyWith(cravingError: CravingError.none));
-      return true;
     }
+
+    emit(state.copyWith(cravingError: CravingError.none));
+    return true;
   }
 
   bool _isValidCategory(String categoryName) {
