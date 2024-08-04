@@ -79,7 +79,8 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
         'category_table.updated_at as category_updated_at '
         'FROM craving_category_table '
         'LEFT JOIN craving_table ON craving_category_table.craving_id=craving_table.id '
-        'LEFT JOIN category_table ON craving_category_table.category_id=category_table.id';
+        'LEFT JOIN category_table ON craving_category_table.category_id=category_table.id '
+        'ORDER BY craving_table.created_at DESC';
 
     final results = await customSelect(customQuery).get();
 

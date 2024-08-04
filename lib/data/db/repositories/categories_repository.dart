@@ -26,7 +26,11 @@ class CategoriesRepositoryImpl extends BaseRepository<CravingsDatabase, Category
 
   @override
   Future<List<CategoryModel>> selectAll() async {
-    final categoriesData = await select(table).get();
+    final categoriesData = await (select(table)
+          ..orderBy([
+            (t) => OrderingTerm(expression: t.updatedAt, mode: OrderingMode.asc),
+          ]))
+        .get();
 
     return categoriesData
         .map((categoryData) => CategoryModel(
