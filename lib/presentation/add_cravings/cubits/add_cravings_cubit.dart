@@ -20,16 +20,38 @@ class AddCravingsCubit extends BaseCubit<AddCravingsState> {
   Future<void> add() async {}
 
   Future<bool> addCategory(String categoryName) async {
-    if (StringUtils.isNullOrEmpty(categoryName)) {
-      emit(state.copyWith(showErrorEmptyCategory: true));
+    if (!_isValidCategory(categoryName)) {
       return false;
     }
 
-    // final category = await _categoriesRepository.insert(categoryName);
+    final category = await _categoriesRepository.insert(categoryName);
+    emit(state.copyWith(categories: state.categories.toList()..add(category)));
     return true;
   }
 
+  void onAddCategory() {
+    emit(state.copyWith(categoryError: CategoryError.none));
+  }
+
   void onCategoryChanged(String categoryName) {
-    emit(state.copyWith(showErrorEmptyCategory: StringUtils.isNullOrEmpty(categoryName)));
+    _isValidCategory(categoryName);
+  }
+
+  void onLongPressCategory(int categoryId) {
+    _categoriesRepository.remove(categoryId);
+    emit(state.copyWith(categories: state.categories.where((category) => category.id != categoryId).toList()));
+  }
+
+  bool _isValidCategory(String categoryName) {
+    if (StringUtils.isNullOrEmpty(categoryName)) {
+      emit(state.copyWith(categoryError: CategoryError.empty));
+      return false;
+    } else if (state.categories.map((category) => category.name.toLowerCase()).contains(categoryName.toLowerCase())) {
+      emit(state.copyWith(categoryError: CategoryError.duplicate));
+      return false;
+    } else {
+      emit(state.copyWith(categoryError: CategoryError.none));
+      return true;
+    }
   }
 }

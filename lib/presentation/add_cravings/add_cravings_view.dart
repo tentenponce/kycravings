@@ -7,16 +7,15 @@ import 'package:kycravings/presentation/shared/localization/generated/l10n.dart'
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_dimens.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_text_styles.dart';
+import 'package:kycravings/presentation/shared/utils/dialog_utils.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_app_bar.dart';
-import 'package:kycravings/presentation/shared/widgets/kyc_button_filled.dart';
-import 'package:kycravings/presentation/shared/widgets/kyc_button_outlined.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_tag.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_text_field.dart';
 
 class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCubit> {
   AddCravingsView({super.key});
 
-  final _textFieldController = TextEditingController();
+  final TextEditingController _categoryController = TextEditingController();
 
   @override
   Widget buildView(BuildContext context) {
@@ -57,18 +56,41 @@ class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCub
               ),
               const SizedBox(height: KycDimens.space5),
               BlocBuilder<AddCravingsCubit, AddCravingsState>(
+                buildWhen: (previous, current) => previous.categories != current.categories,
                 builder: (context, state) => Wrap(
                   spacing: KycDimens.space2,
                   runSpacing: KycDimens.space2,
-                  children: state.categories.map((category) => KycTag(label: category.name, isSelected: false)).toList()
+                  children: state.categories
+                      .map(
+                        (category) => KycTag(
+                          label: category.name,
+                          isSelected: false,
+                          onLongPress: () async => DialogUtils.showConfirmDialog(
+                            context: context,
+                            title: I18n.of(context).addCravingsCategoryDeleteDialogTitle,
+                            message: I18n.of(context).addCravingsCategoryDeleteDialogMessage(category.name),
+                            onOk: () {
+                              cubit.onLongPressCategory(category.id);
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                      )
+                      .toList()
                     ..add(KycTag(
                       label: I18n.of(context).addCravingsCategoryButton,
                       isSelected: false,
                       onPressed: () async {
+                        cubit.onAddCategory();
                         await _showTextInputDialog(context);
                       },
                     )),
                 ),
+              ),
+              const SizedBox(height: KycDimens.space5),
+              Text(
+                I18n.of(context).addCravingsCategoryListMessage,
+                style: KycTextStyles.textStyle5Reg(),
               ),
             ],
           ),
@@ -78,56 +100,35 @@ class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCub
   }
 
   Future<String?> _showTextInputDialog(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: KycColors.white,
-            title: Text(
-              I18n.of(context).addCravingsCategoryDialogTitle,
-              style: KycTextStyles.textStyle3Bold(),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                KycTextField(
-                  controller: _textFieldController,
-                  onChanged: cubit.onCategoryChanged,
-                ),
-                const SizedBox(height: KycDimens.space3),
-                BlocBuilder<AddCravingsCubit, AddCravingsState>(
-                  bloc: cubit,
-                  builder: (context, state) {
-                    return state.showErrorEmptyCategory
-                        ? Text(
-                            I18n.of(context).addCravingsCategoryDialogErrorEmpty,
-                            style: KycTextStyles.textStyle5Reg().copyWith(color: KycColors.red),
-                          )
-                        : const SizedBox();
-                  },
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              KycButtonOutlined(
-                title: I18n.of(context).genericCancel,
-                onPressed: () => Navigator.pop(context),
-                isSmall: true,
-              ),
-              KycButtonFilled(
-                title: I18n.of(context).genericAdd,
-                onPressed: () async {
-                  if (await cubit.addCategory(_textFieldController.text)) {
-                    if (context.mounted) {
-                      Navigator.pop(context);
-                    }
-                  }
-                },
-                isSmall: true,
-              ),
-            ],
+    _categoryController.text = '';
+    return DialogUtils.showTextInputDialog(
+      context: context,
+      onOk: (value) async {
+        if (await cubit.addCategory(value)) {
+          if (context.mounted) {
+            Navigator.pop(context);
+          }
+        }
+      },
+      title: I18n.of(context).addCravingsCategoryDialogTitle,
+      textEditingController: _categoryController,
+      onTextChanged: cubit.onCategoryChanged,
+      errorMessage: BlocBuilder<AddCravingsCubit, AddCravingsState>(
+        buildWhen: (previous, current) => previous.categoryError != current.categoryError,
+        bloc: cubit,
+        builder: (context, state) {
+          return Text(
+            switch (state.categoryError) {
+              CategoryError.empty => I18n.of(context).addCravingsCategoryDialogErrorEmpty,
+              CategoryError.duplicate =>
+                I18n.of(context).addCravingsCategoryDialogErrorDuplicate(_categoryController.text),
+              CategoryError.none => '',
+            },
+            style: KycTextStyles.textStyle5Reg().copyWith(color: KycColors.red),
           );
-        });
+        },
+      ),
+      ok: I18n.of(context).genericAdd,
+    );
   }
 }

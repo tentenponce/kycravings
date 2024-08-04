@@ -1,6 +1,7 @@
 {
     "appName": "KYCravings",
     "genericAdd": "Add",
+    "genericOk": "Ok",
     "genericCancel": "Cancel",
     "homeShakeYourPhone": "or try shaking your phone!",
     "homePredictButton": "Predict!",
@@ -11,7 +12,11 @@
     "yourCravingsTitle": "Your Cravings",
     "addCravingsHint": "Put your food craving here",
     "addCravingsCategoryListTitle": "Click to select your craving categories below:",
+    "addCravingsCategoryListMessage": "Long press a category to delete it.",
     "addCravingsCategoryButton": "Add Category +",
     "addCravingsCategoryDialogTitle": "Add Category",
-    "addCravingsCategoryDialogErrorEmpty": "Cannot add empty category"
+    "addCravingsCategoryDialogErrorEmpty": "Cannot add empty text category.",
+    "addCravingsCategoryDialogErrorDuplicate": "{categoryName} already exists.",
+    "addCravingsCategoryDeleteDialogTitle": "Delete Category",
+    "addCravingsCategoryDeleteDialogMessage": "Are you sure you want to delete {categoryName}? This category will be deleted from other cravings as well."
 }

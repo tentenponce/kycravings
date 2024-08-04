@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kycravings/data/db/core/repository.dart';
 import 'package:kycravings/data/db/cravings_database.dart';
@@ -6,6 +7,9 @@ import 'package:kycravings/domain/models/category_model.dart';
 
 abstract interface class CategoriesRepository implements Repository<CategoryTable, CategoryTableData> {
   Future<List<CategoryModel>> selectAll();
+  Future<CategoryModel> insert(String categoryName);
+  Future<void> replace(CategoryModel category);
+  void remove(int id);
 }
 
 @LazySingleton(as: CategoriesRepository)
@@ -23,5 +27,32 @@ class CategoriesRepositoryImpl extends BaseRepository<CravingsDatabase, Category
               name: categoryData.name,
             ))
         .toList();
+  }
+
+  @override
+  Future<CategoryModel> insert(String categoryName) async {
+    final id = await into(table).insert(
+      CategoryTableCompanion(
+        name: Value(categoryName),
+      ),
+    );
+
+    return CategoryModel(
+      id: id,
+      name: categoryName,
+    );
+  }
+
+  @override
+  Future<void> replace(CategoryModel category) {
+    return update(table).replace(CategoryTableData(
+      id: category.id,
+      name: category.name,
+    ));
+  }
+
+  @override
+  Future<int> remove(int id) {
+    return (delete(table)..where((t) => t.id.equals(id))).go();
   }
 }
