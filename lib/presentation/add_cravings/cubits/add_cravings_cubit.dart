@@ -11,7 +11,7 @@ import 'package:kycravings/presentation/shared/utils/string_utils.dart';
 class AddCravingsCubit extends BaseCubit<AddCravingsState> {
   final CravingsRepository _cravingsRepository;
   final CategoriesRepository _categoriesRepository;
-  final DebouncerUtil _debouncerUtil;
+  final DebouncerUtils _debouncerUtil;
   AddCravingsCubit(
     this._cravingsRepository,
     this._categoriesRepository,

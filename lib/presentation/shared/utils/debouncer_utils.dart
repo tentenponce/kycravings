@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:injectable/injectable.dart';
 
-abstract interface class DebouncerUtil {
+abstract interface class DebouncerUtils {
   void setMilliseconds(int value);
 
   void run(VoidCallback action);
@@ -11,8 +11,8 @@ abstract interface class DebouncerUtil {
   void cancel();
 }
 
-@Injectable(as: DebouncerUtil)
-class DebouncerUtilImpl implements DebouncerUtil {
+@Injectable(as: DebouncerUtils)
+class DebouncerUtilImpl implements DebouncerUtils {
   Timer? _timer;
   int _milliseconds = 1000;
 
