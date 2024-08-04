@@ -12,7 +12,7 @@ abstract interface class DebouncerUtils {
 }
 
 @Injectable(as: DebouncerUtils)
-class DebouncerUtilImpl implements DebouncerUtils {
+class DebouncerUtilsImpl implements DebouncerUtils {
   Timer? _timer;
   int _milliseconds = 1000;
 
