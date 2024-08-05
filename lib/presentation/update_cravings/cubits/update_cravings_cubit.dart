@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:injectable/injectable.dart';
 import 'package:kycravings/data/db/repositories/categories_repository.dart';
 import 'package:kycravings/data/db/repositories/cravings_repository.dart';
@@ -30,7 +32,7 @@ class UpdateCravingsCubit extends BaseCubit<UpdateCravingsState> {
     super.arguments = arguments;
     final cravingModel = arguments! as CravingModel;
 
-    _setCravingModelArument(cravingModel);
+    unawaited(_setCravingModelArument(cravingModel));
   }
 
   Future<bool> updateCraving(String updatedCravingName) async {
