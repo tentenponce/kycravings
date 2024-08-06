@@ -119,7 +119,7 @@ void main() {
       });
     });
 
-    test('onCravingChanged should st CravingError.none if all validations passed', () async {
+    test('onCravingChanged should emit CravingError.none if all validations passed', () async {
       final mockCategories = [
         CategoryModel.empty,
         CategoryModel.empty,
@@ -236,6 +236,7 @@ void main() {
 
     test('onCategoryChanged should set CategoryError.empty if category is empty string', () async {
       final unit = createUnitToTest();
+      unit.emit(unit.state.copyWith(categoryError: CategoryError.duplicate));
 
       unit.onCategoryChanged('');
 
