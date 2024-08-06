@@ -49,6 +49,7 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
         'category_table.created_at as category_created_at, '
         'category_table.updated_at as category_updated_at '
         'FROM craving_category_table '
+        // right join to get all cravings even if it doesn't have a category
         'RIGHT JOIN craving_table ON craving_category_table.craving_id=craving_table.id '
         'LEFT JOIN category_table ON craving_category_table.category_id=category_table.id '
         'ORDER BY craving_table.created_at DESC';
@@ -64,6 +65,7 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
           .where((result) {
             return result.read<int>('craving_id') == cravingId;
           })
+          // cravings without categories are allowed so filter null category ids
           .where((result) => result.read<int?>('category_id') != null)
           .map((result) {
             final categoryId = result.read<int>('category_id');
