@@ -8,6 +8,7 @@ import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_dimens.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_text_styles.dart';
 import 'package:kycravings/presentation/shared/utils/dialog_utils.dart';
+import 'package:kycravings/presentation/shared/widgets/kyc_add_category_dialog.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_app_bar.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_tag.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_text_field.dart';
@@ -120,7 +121,7 @@ class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCub
 
   Future<String?> _showTextInputDialog(BuildContext context) async {
     _categoryController.text = '';
-    return DialogUtils.showTextInputDialog(
+    return KycAddCategoryDialog.show(
       context: context,
       onOk: (value) async {
         if (await cubit.addCategory(value)) {
@@ -129,8 +130,7 @@ class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCub
           }
         }
       },
-      title: I18n.of(context).addCravingsCategoryDialogTitle,
-      textEditingController: _categoryController,
+      categoryController: _categoryController,
       onTextChanged: cubit.onCategoryChanged,
       errorMessage: BlocBuilder<AddCravingsCubit, AddCravingsState>(
         buildWhen: (previous, current) => previous.categoryError != current.categoryError,
@@ -147,7 +147,6 @@ class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCub
           );
         },
       ),
-      ok: I18n.of(context).genericAdd,
     );
   }
 }

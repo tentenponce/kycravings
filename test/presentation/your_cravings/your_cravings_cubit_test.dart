@@ -26,8 +26,8 @@ void main() {
 
     test('getCravings should emit cravings successfully', () async {
       final mockCravings = [
-        CravingModel.empty,
-        CravingModel.empty,
+        CravingModel.test,
+        CravingModel.test,
       ];
       when(mockCravingsRepository.selectWithCategories()).thenAnswer((_) async => mockCravings);
 
@@ -40,8 +40,8 @@ void main() {
 
     test('onCravingDelete should delete craving and remove from state', () async {
       final mockCravings = [
-        CravingModel.empty.copyWith(id: 1),
-        CravingModel.empty.copyWith(id: 2),
+        CravingModel.test.copyWith(id: 1),
+        CravingModel.test.copyWith(id: 2),
       ];
       const cravingIdToDelete = 2;
       when(mockCravingsRepository.selectWithCategories()).thenAnswer((_) async => mockCravings);
