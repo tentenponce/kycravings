@@ -13,7 +13,7 @@
     "yourCravingsTitle": "Your Cravings",
     "yourCravingsDateMessage": "Updated last {ago}",
     "yourCravingsDeleteDialogTitle": "Delete Craving",
-    "yourCravingsDeleteDialogMessage": "Are you sure you will not crave for {cravingName} again?",
+    "yourCravingsDeleteDialogMessage": "Are you sure you will not crave for {cravingName} again? This will also be deleted from your history.",
     "addCravingsHint": "Put your food craving here",
     "addCravingsErrorEmpty": "Where's your craving?",
     "addCravingsErrorDuplicate": "{cravingName} already exists.",
