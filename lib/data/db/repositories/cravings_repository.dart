@@ -4,6 +4,7 @@ import 'package:kycravings/core/logging/logger.dart';
 import 'package:kycravings/data/db/core/repository.dart';
 import 'package:kycravings/data/db/cravings_database.dart';
 import 'package:kycravings/data/db/repositories/craving_category_repository.dart';
+import 'package:kycravings/data/db/repositories/cravings_history_repository.dart';
 import 'package:kycravings/data/db/tables/craving_table.dart';
 import 'package:kycravings/domain/models/category_model.dart';
 import 'package:kycravings/domain/models/craving_model.dart';
@@ -25,10 +26,12 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
     implements CravingsRepository {
   final Logger _logger;
   final CravingCategoryRepository _cravingCategoryRepository;
+  final CravingsHistoryRepository _cravingsHistoryRepository;
 
   CravingsRepositoryImpl(
     this._logger,
     this._cravingCategoryRepository,
+    this._cravingsHistoryRepository,
     super.attachedDatabase,
   ) {
     _logger.logFor(this);
@@ -46,7 +49,7 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
         'category_table.created_at as category_created_at, '
         'category_table.updated_at as category_updated_at '
         'FROM craving_category_table '
-        'LEFT JOIN craving_table ON craving_category_table.craving_id=craving_table.id '
+        'RIGHT JOIN craving_table ON craving_category_table.craving_id=craving_table.id '
         'LEFT JOIN category_table ON craving_category_table.category_id=category_table.id '
         'ORDER BY craving_table.created_at DESC';
 
@@ -57,20 +60,23 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
 
     return cravingIds.map((cravingId) {
       // get categories for each craving
-      final categories = results.where((result) {
-        return result.read<int>('craving_id') == cravingId;
-      }).map((result) {
-        final categoryId = result.read<int>('category_id');
-        final categoryName = result.read<String>('category_name');
-        final categoryCreatedAt = result.read<DateTime>('category_created_at');
-        final categoryUpdatedAt = result.read<DateTime>('category_updated_at');
-        return CategoryModel(
-          id: categoryId,
-          name: categoryName,
-          createdAt: categoryCreatedAt,
-          updatedAt: categoryUpdatedAt,
-        );
-      });
+      final categories = results
+          .where((result) {
+            return result.read<int>('craving_id') == cravingId;
+          })
+          .where((result) => result.read<int?>('category_id') != null)
+          .map((result) {
+            final categoryId = result.read<int>('category_id');
+            final categoryName = result.read<String>('category_name');
+            final categoryCreatedAt = result.read<DateTime>('category_created_at');
+            final categoryUpdatedAt = result.read<DateTime>('category_updated_at');
+            return CategoryModel(
+              id: categoryId,
+              name: categoryName,
+              createdAt: categoryCreatedAt,
+              updatedAt: categoryUpdatedAt,
+            );
+          });
 
       // get name of the craving ID
       final cravingResult = results.firstWhere((result) {
@@ -169,6 +175,7 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
   @override
   Future<int> remove(int id) async {
     await _cravingCategoryRepository.deleteByCravingId(id);
+    await _cravingsHistoryRepository.deleteByCravingId(id);
     return (delete(table)..where((t) => t.id.equals(id))).go();
   }
 }
