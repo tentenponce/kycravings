@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kycravings/data/db/core/repository.dart';
 import 'package:kycravings/data/db/cravings_database.dart';
@@ -8,6 +9,7 @@ import 'package:kycravings/domain/models/craving_model.dart';
 
 abstract interface class CravingsHistoryRepository implements Repository<CravingHistoryTable, CravingHistoryTableData> {
   Future<Iterable<CravingHistoryModel>> selectAll();
+  Future<CravingHistoryModel> insert(CravingModel craving);
   Future<int> deleteByCravingId(int cravingId);
   void remove(int id);
 }
@@ -63,6 +65,21 @@ class CravingsHistoryRepositoryImpl
         createdAt: createdAt,
       );
     });
+  }
+
+  @override
+  Future<CravingHistoryModel> insert(CravingModel craving) async {
+    final addedCravingHistory = await into(table).insertReturning(
+      CravingHistoryTableCompanion(
+        cravingId: Value(craving.id),
+      ),
+    );
+
+    return CravingHistoryModel(
+      id: addedCravingHistory.id,
+      cravingModel: craving,
+      createdAt: addedCravingHistory.createdAt,
+    );
   }
 
   @override
