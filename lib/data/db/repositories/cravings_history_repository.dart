@@ -6,9 +6,11 @@ import 'package:kycravings/data/db/repositories/craving_category_repository.dart
 import 'package:kycravings/data/db/tables/craving_history_table.dart';
 import 'package:kycravings/domain/models/craving_history_model.dart';
 import 'package:kycravings/domain/models/craving_model.dart';
+import 'package:kycravings/domain/models/craving_preference_model.dart';
 
 abstract interface class CravingsHistoryRepository implements Repository<CravingHistoryTable, CravingHistoryTableData> {
   Future<Iterable<CravingHistoryModel>> selectAll();
+  Future<Iterable<CravingPreferenceModel>> cravingPreferences();
   Future<CravingHistoryModel> insert(CravingModel craving);
   Future<int> deleteByCravingId(int cravingId);
   void remove(int id);
@@ -63,6 +65,48 @@ class CravingsHistoryRepositoryImpl
           updatedAt: cravingUpdatedAt,
         ),
         createdAt: createdAt,
+      );
+    });
+  }
+
+  @override
+  Future<Iterable<CravingPreferenceModel>> cravingPreferences() async {
+    const customQuery = 'SELECT '
+        'COUNT(craving_history_table.id) as history_count, '
+        'MAX(craving_history_table.created_at) as last_chosen, '
+        'craving_table.id as craving_id, '
+        'craving_table.name as craving_name, '
+        'craving_table.created_at as craving_created_at, '
+        'craving_table.updated_at as craving_updated_at '
+        'FROM craving_history_table '
+        'LEFT JOIN craving_table ON craving_history_table.craving_id=craving_table.id '
+        'GROUP BY craving_id';
+
+    final results = await customSelect(customQuery).get();
+
+    final cravingCategoryResults = await _cravingCategoryRepository.selectAll();
+
+    return results.map((result) {
+      final cravingId = result.read<int>('craving_id');
+      final cravingName = result.read<String>('craving_name');
+      final cravingCreatedAt = result.read<DateTime>('craving_created_at');
+      final cravingUpdatedAt = result.read<DateTime>('craving_updated_at');
+      final historyCount = result.read<int>('history_count');
+      final lastChosen = result.read<DateTime>('last_chosen');
+
+      // filter by craving ID and get the categories
+      final categories = cravingCategoryResults.where((result) => result.$2 == cravingId).map((result) => result.$1);
+
+      return CravingPreferenceModel(
+        cravingModel: CravingModel(
+          id: cravingId,
+          name: cravingName,
+          categories: categories,
+          createdAt: cravingCreatedAt,
+          updatedAt: cravingUpdatedAt,
+        ),
+        historyCount: historyCount,
+        lastChosen: lastChosen,
       );
     });
   }

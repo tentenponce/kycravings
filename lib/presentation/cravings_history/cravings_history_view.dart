@@ -11,10 +11,19 @@ import 'package:kycravings/presentation/shared/utils/dialog_utils.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_app_bar.dart';
 
 class CravingsHistoryView extends StatelessWidget with ViewCubitMixin<CravingsHistoryCubit> {
-  CravingsHistoryView({super.key});
+  const CravingsHistoryView({super.key});
 
   @override
   Widget buildView(BuildContext context) {
+    return const _CravingsHistoryView();
+  }
+}
+
+class _CravingsHistoryView extends StatelessWidget {
+  const _CravingsHistoryView();
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KycColors.white,
       appBar: KycAppBar(
@@ -44,7 +53,7 @@ class CravingsHistoryView extends StatelessWidget with ViewCubitMixin<CravingsHi
                             title: I18n.of(context).cravingsHistoryDeleteDialogTitle,
                             message: I18n.of(context).cravingsHistoryDeleteDialogMessage,
                             onOk: () {
-                              cubit.onCravingDelete(cravingHistory.id);
+                              context.read<CravingsHistoryCubit>().onCravingDelete(cravingHistory.id);
                               Navigator.pop(context);
                             },
                           ),

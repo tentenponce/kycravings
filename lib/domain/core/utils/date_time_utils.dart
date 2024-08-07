@@ -1,5 +1,17 @@
-abstract final class DateTimeUtils {
-  static String ago(DateTime dateTime) {
+import 'package:injectable/injectable.dart';
+
+abstract interface class DateTimeUtils {
+  DateTime now();
+  String ago(DateTime dateTime);
+}
+
+@LazySingleton(as: DateTimeUtils)
+class DateTimeUtilsImpl implements DateTimeUtils {
+  @override
+  DateTime now() => DateTime.now();
+
+  @override
+  String ago(DateTime dateTime) {
     final date2 = DateTime.now();
     final difference = date2.difference(dateTime);
 

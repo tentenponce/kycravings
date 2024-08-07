@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:kycravings/domain/core/utils/date_time_utils.dart';
 import 'package:kycravings/domain/models/craving_history_model.dart';
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_dimens.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_text_styles.dart';
-import 'package:kycravings/presentation/shared/utils/date_time_utils.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_tag.dart';
 
 abstract final class CravingHistoryItemView {
@@ -40,7 +41,8 @@ abstract final class CravingHistoryItemView {
                 ),
                 const SizedBox(height: KycDimens.space3),
                 Text(
-                  I18n.of(context).cravingsHistoryDateMessage(DateTimeUtils.ago(cravingHistoryModel.createdAt)),
+                  I18n.of(context)
+                      .cravingsHistoryDateMessage(GetIt.instance<DateTimeUtils>().ago(cravingHistoryModel.createdAt)),
                   style: KycTextStyles.textStyle5Reg(),
                 ),
               ],

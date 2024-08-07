@@ -14,13 +14,20 @@ import 'package:kycravings/presentation/shared/widgets/kyc_tag.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_text_field.dart';
 
 class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCubit> {
-  AddCravingsView({super.key});
+  const AddCravingsView({super.key});
 
+  @override
+  Widget buildView(BuildContext context) {
+    return _AddCravingsView();
+  }
+}
+
+class _AddCravingsView extends StatelessWidget {
   final TextEditingController _cravingController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
 
   @override
-  Widget buildView(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KycColors.white,
       appBar: KycAppBar(
@@ -33,7 +40,7 @@ class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCub
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          if (await cubit.addCraving(_cravingController.text) && context.mounted) {
+          if (await context.read<AddCravingsCubit>().addCraving(_cravingController.text) && context.mounted) {
             Navigator.pop(context, true);
           }
         },
@@ -55,7 +62,7 @@ class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCub
               KycTextField(
                 label: I18n.of(context).addCravingsHint,
                 controller: _cravingController,
-                onChanged: cubit.onCravingChanged,
+                onChanged: context.read<AddCravingsCubit>().onCravingChanged,
               ),
               const SizedBox(height: KycDimens.space3),
               BlocBuilder<AddCravingsCubit, AddCravingsState>(builder: (context, state) {
@@ -84,13 +91,13 @@ class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCub
                         (category) => KycTag(
                           label: category.name,
                           isSelected: category.isSelected ?? false,
-                          onPressed: () => cubit.onCategoryClick(category.id),
+                          onPressed: () => context.read<AddCravingsCubit>().onCategoryClick(category.id),
                           onLongPress: () async => DialogUtils.showConfirmDialog(
                             context: context,
                             title: I18n.of(context).addCravingsCategoryDeleteDialogTitle,
                             message: I18n.of(context).addCravingsCategoryDeleteDialogMessage(category.name),
                             onOk: () {
-                              cubit.onLongPressCategory(category.id);
+                              context.read<AddCravingsCubit>().onLongPressCategory(category.id);
                               Navigator.pop(context);
                             },
                           ),
@@ -101,7 +108,7 @@ class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCub
                       label: I18n.of(context).addCravingsCategoryButton,
                       isSelected: false,
                       onPressed: () async {
-                        cubit.onAddCategory();
+                        context.read<AddCravingsCubit>().onAddCategory();
                         await _showTextInputDialog(context);
                       },
                     )),
@@ -124,17 +131,17 @@ class AddCravingsView extends StatelessWidget with ViewCubitMixin<AddCravingsCub
     return KycAddCategoryDialog.show(
       context: context,
       onOk: (value) async {
-        if (await cubit.addCategory(value)) {
+        if (await context.read<AddCravingsCubit>().addCategory(value)) {
           if (context.mounted) {
             Navigator.pop(context);
           }
         }
       },
       categoryController: _categoryController,
-      onTextChanged: cubit.onCategoryChanged,
+      onTextChanged: context.read<AddCravingsCubit>().onCategoryChanged,
       errorMessage: BlocBuilder<AddCravingsCubit, AddCravingsState>(
+        bloc: context.read<AddCravingsCubit>(),
         buildWhen: (previous, current) => previous.categoryError != current.categoryError,
-        bloc: cubit,
         builder: (context, state) {
           return Text(
             switch (state.categoryError) {
