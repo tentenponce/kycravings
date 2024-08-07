@@ -35,6 +35,9 @@ class _PredictButtonState extends State<PredictButton> {
       onTapUp: (_) => setState(() {
         _predictButtonRadius = KycDimens.predictRadiusRegular;
       }),
+      onTapCancel: () => setState(() {
+        _predictButtonRadius = KycDimens.predictRadiusRegular;
+      }),
       borderRadius: BorderRadius.circular(KycDimens.radiusCircle),
       child: Ink(
         decoration: BoxDecoration(

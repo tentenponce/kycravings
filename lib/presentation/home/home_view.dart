@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kycravings/presentation/core/base/view_cubit_mixin.dart';
 import 'package:kycravings/presentation/drawer/drawer_view.dart';
+import 'package:kycravings/presentation/home/cubits/home_cubit.dart';
 import 'package:kycravings/presentation/home/subviews/predict_button.dart';
 import 'package:kycravings/presentation/shared/assets/assets.gen.dart';
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
@@ -9,13 +11,13 @@ import 'package:kycravings/presentation/shared/resources/kyc_text_styles.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_app_bar.dart';
 import 'package:lottie/lottie.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatelessWidget with ViewCubitMixin<HomeCubit> {
   HomeView({super.key});
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildView(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: KycColors.white,
