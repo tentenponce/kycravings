@@ -40,7 +40,7 @@ abstract final class CravingHistoryItemView {
                 ),
                 const SizedBox(height: KycDimens.space3),
                 Text(
-                  I18n.of(context).yourCravingsDateMessage(DateTimeUtils.ago(cravingHistoryModel.createdAt)),
+                  I18n.of(context).cravingsHistoryDateMessage(DateTimeUtils.ago(cravingHistoryModel.createdAt)),
                   style: KycTextStyles.textStyle5Reg(),
                 ),
               ],

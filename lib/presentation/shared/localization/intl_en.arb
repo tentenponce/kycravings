@@ -11,7 +11,7 @@
     "drawerHistory": "Cravings History",
     "drawerAbout": "About",
     "yourCravingsTitle": "Your Cravings",
-    "yourCravingsDateMessage": "Updated last {ago}",
+    "yourCravingsDateMessage": "Updated {ago}",
     "yourCravingsDeleteDialogTitle": "Delete Craving",
     "yourCravingsDeleteDialogMessage": "Are you sure you will not crave for {cravingName} again? This will also be deleted from your history.",
     "addCravingsHint": "Put your food craving here",
@@ -27,5 +27,6 @@
     "addCravingsCategoryDeleteDialogMessage": "Are you sure you want to delete {categoryName}? This category will be deleted from other cravings as well.",
     "cravingsHistoryTitle": "Cravings History",
     "cravingsHistoryDeleteDialogTitle": "Delete Craving History",
-    "cravingsHistoryDeleteDialogMessage": "Are you sure you want to delete this history?"
+    "cravingsHistoryDeleteDialogMessage": "Are you sure you want to delete this history?",
+    "cravingsHistoryDateMessage": "Craved {ago}"
 }

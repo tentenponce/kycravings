@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kycravings/presentation/core/base/view_cubit_mixin.dart';
 import 'package:kycravings/presentation/cravings_history/cubits/cravings_history_cubit.dart';
 import 'package:kycravings/presentation/cravings_history/states/cravings_history_state.dart';
-import 'package:kycravings/presentation/cravings_history/subviews/craving_item_view.dart';
+import 'package:kycravings/presentation/cravings_history/subviews/craving_history_item_view.dart';
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_dimens.dart';
