@@ -13,10 +13,17 @@ import 'package:kycravings/presentation/your_cravings/states/your_cravings_state
 import 'package:kycravings/presentation/your_cravings/subviews/craving_item_view.dart';
 
 class YourCravingsView extends StatelessWidget with ViewCubitMixin<YourCravingsCubit> {
-  YourCravingsView({super.key});
+  const YourCravingsView({super.key});
 
   @override
   Widget buildView(BuildContext context) {
+    return _YourCravingsView();
+  }
+}
+
+class _YourCravingsView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KycColors.white,
       appBar: KycAppBar(
@@ -49,8 +56,8 @@ class YourCravingsView extends StatelessWidget with ViewCubitMixin<YourCravingsC
                               ),
                             );
 
-                            if (isUpdated ?? false) {
-                              await cubit.getCravings();
+                            if ((isUpdated ?? false) && context.mounted) {
+                              await context.read<YourCravingsCubit>().getCravings();
                             }
                           },
                           onDeleteClick: () async => DialogUtils.showConfirmDialog(
@@ -58,7 +65,7 @@ class YourCravingsView extends StatelessWidget with ViewCubitMixin<YourCravingsC
                             title: I18n.of(context).yourCravingsDeleteDialogTitle,
                             message: I18n.of(context).yourCravingsDeleteDialogMessage(craving.name),
                             onOk: () {
-                              cubit.onCravingDelete(craving.id);
+                              context.read<YourCravingsCubit>().onCravingDelete(craving.id);
                               Navigator.pop(context);
                             },
                           ),
@@ -77,8 +84,8 @@ class YourCravingsView extends StatelessWidget with ViewCubitMixin<YourCravingsC
             ),
           );
 
-          if (isAdded ?? false) {
-            await cubit.getCravings();
+          if ((isAdded ?? false) && context.mounted) {
+            await context.read<YourCravingsCubit>().getCravings();
           }
         },
         backgroundColor: KycColors.primary,

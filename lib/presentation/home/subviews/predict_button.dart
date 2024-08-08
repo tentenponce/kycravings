@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kycravings/presentation/home/cubits/home_cubit.dart';
 import 'package:kycravings/presentation/shared/assets/assets.gen.dart';
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_blurs.dart';
@@ -22,6 +24,7 @@ class _PredictButtonState extends State<PredictButton> {
     return InkWell(
       onTap: () {
         setState(() {
+          context.read<HomeCubit>().predict();
           _loading = true;
           Future.delayed(
             const Duration(milliseconds: 1000),

@@ -15,14 +15,21 @@ import 'package:kycravings/presentation/update_cravings/cubits/update_cravings_c
 import 'package:kycravings/presentation/update_cravings/states/update_cravings_state.dart';
 
 class UpdateCravingsView extends StatelessWidget with ViewCubitMixin<UpdateCravingsCubit> {
-  UpdateCravingsView({super.key});
+  const UpdateCravingsView({super.key});
 
+  @override
+  Widget buildView(BuildContext context) {
+    return _UpdateCravingsView();
+  }
+}
+
+class _UpdateCravingsView extends StatelessWidget {
   final TextEditingController _cravingController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
 
   @override
-  Widget buildView(BuildContext context) {
-    _cravingController.text = (cubit.arguments! as CravingModel).name;
+  Widget build(BuildContext context) {
+    _cravingController.text = context.select((UpdateCravingsCubit cubit) => cubit.arguments! as CravingModel).name;
 
     return Scaffold(
       backgroundColor: KycColors.white,
@@ -46,7 +53,7 @@ class UpdateCravingsView extends StatelessWidget with ViewCubitMixin<UpdateCravi
               KycTextField(
                 label: I18n.of(context).addCravingsHint,
                 controller: _cravingController,
-                onChanged: cubit.onCravingChanged,
+                onChanged: context.read<UpdateCravingsCubit>().onCravingChanged,
               ),
               const SizedBox(height: KycDimens.space3),
               BlocBuilder<UpdateCravingsCubit, UpdateCravingsState>(builder: (context, state) {
@@ -75,13 +82,13 @@ class UpdateCravingsView extends StatelessWidget with ViewCubitMixin<UpdateCravi
                         (category) => KycTag(
                           label: category.name,
                           isSelected: category.isSelected ?? false,
-                          onPressed: () => cubit.onCategoryClick(category.id),
+                          onPressed: () => context.read<UpdateCravingsCubit>().onCategoryClick(category.id),
                           onLongPress: () async => DialogUtils.showConfirmDialog(
                             context: context,
                             title: I18n.of(context).addCravingsCategoryDeleteDialogTitle,
                             message: I18n.of(context).addCravingsCategoryDeleteDialogMessage(category.name),
                             onOk: () {
-                              cubit.onLongPressCategory(category.id);
+                              context.read<UpdateCravingsCubit>().onLongPressCategory(category.id);
                               Navigator.pop(context);
                             },
                           ),
@@ -92,7 +99,7 @@ class UpdateCravingsView extends StatelessWidget with ViewCubitMixin<UpdateCravi
                       label: I18n.of(context).addCravingsCategoryButton,
                       isSelected: false,
                       onPressed: () async {
-                        cubit.onAddCategory();
+                        context.read<UpdateCravingsCubit>().onAddCategory();
                         await _showTextInputDialog(context);
                       },
                     )),
@@ -118,9 +125,10 @@ class UpdateCravingsView extends StatelessWidget with ViewCubitMixin<UpdateCravi
                 onPressed: () async => DialogUtils.showConfirmDialog(
                   context: context,
                   title: I18n.of(context).yourCravingsDeleteDialogTitle,
-                  message: I18n.of(context).yourCravingsDeleteDialogMessage(cubit.state.cravingModel.name),
+                  message: I18n.of(context)
+                      .yourCravingsDeleteDialogMessage(context.read<UpdateCravingsCubit>().state.cravingModel.name),
                   onOk: () {
-                    cubit.deleteCraving();
+                    context.read<UpdateCravingsCubit>().deleteCraving();
                     Navigator.pop(context);
                   },
                 ),
@@ -137,7 +145,8 @@ class UpdateCravingsView extends StatelessWidget with ViewCubitMixin<UpdateCravi
             child: FloatingActionButton(
               heroTag: 'update',
               onPressed: () async {
-                if (await cubit.updateCraving(_cravingController.text) && context.mounted) {
+                if (await context.read<UpdateCravingsCubit>().updateCraving(_cravingController.text) &&
+                    context.mounted) {
                   Navigator.pop(context, true);
                 }
               },
@@ -158,17 +167,17 @@ class UpdateCravingsView extends StatelessWidget with ViewCubitMixin<UpdateCravi
     return KycAddCategoryDialog.show(
       context: context,
       onOk: (value) async {
-        if (await cubit.addCategory(value)) {
+        if (await context.read<UpdateCravingsCubit>().addCategory(value)) {
           if (context.mounted) {
             Navigator.pop(context);
           }
         }
       },
       categoryController: _categoryController,
-      onTextChanged: cubit.onCategoryChanged,
+      onTextChanged: context.read<UpdateCravingsCubit>().onCategoryChanged,
       errorMessage: BlocBuilder<UpdateCravingsCubit, UpdateCravingsState>(
+        bloc: context.read<UpdateCravingsCubit>(),
         buildWhen: (previous, current) => previous.categoryError != current.categoryError,
-        bloc: cubit,
         builder: (context, state) {
           return Text(
             switch (state.categoryError) {

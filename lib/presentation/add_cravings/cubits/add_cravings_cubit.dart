@@ -31,7 +31,7 @@ class AddCravingsCubit extends BaseCubit<AddCravingsState> {
       return false;
     }
 
-    await _cravingsRepository.insert(cravingName, state.categories);
+    await _cravingsRepository.insert(cravingName, state.categories.where((category) => category.isSelected ?? false));
     return true;
   }
 

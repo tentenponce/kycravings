@@ -5,6 +5,7 @@ import 'package:kycravings/data/db/tables/category_table.dart';
 import 'package:kycravings/data/db/tables/craving_category_table.dart';
 import 'package:kycravings/data/db/tables/craving_history_table.dart';
 import 'package:kycravings/data/db/tables/craving_table.dart';
+import 'package:kycravings/data/db/tables/ignored_craving_table.dart';
 
 part 'cravings_database.g.dart';
 
@@ -14,6 +15,7 @@ part 'cravings_database.g.dart';
   CategoryTable,
   CravingCategoryTable,
   CravingHistoryTable,
+  IgnoredCravingTable,
 ])
 class CravingsDatabase extends _$CravingsDatabase {
   CravingsDatabase() : super(_openConnection());

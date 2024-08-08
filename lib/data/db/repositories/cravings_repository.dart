@@ -5,6 +5,7 @@ import 'package:kycravings/data/db/core/repository.dart';
 import 'package:kycravings/data/db/cravings_database.dart';
 import 'package:kycravings/data/db/repositories/craving_category_repository.dart';
 import 'package:kycravings/data/db/repositories/cravings_history_repository.dart';
+import 'package:kycravings/data/db/repositories/ignored_cravings_repository.dart';
 import 'package:kycravings/data/db/tables/craving_table.dart';
 import 'package:kycravings/domain/models/category_model.dart';
 import 'package:kycravings/domain/models/craving_model.dart';
@@ -27,11 +28,13 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
   final Logger _logger;
   final CravingCategoryRepository _cravingCategoryRepository;
   final CravingsHistoryRepository _cravingsHistoryRepository;
+  final IgnoredCravingsRepository _ignoredCravingsRepository;
 
   CravingsRepositoryImpl(
     this._logger,
     this._cravingCategoryRepository,
     this._cravingsHistoryRepository,
+    this._ignoredCravingsRepository,
     super.attachedDatabase,
   ) {
     _logger.logFor(this);
@@ -178,6 +181,7 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
   Future<int> remove(int id) async {
     await _cravingCategoryRepository.deleteByCravingId(id);
     await _cravingsHistoryRepository.deleteByCravingId(id);
+    await _ignoredCravingsRepository.deleteByCravingId(id);
     return (delete(table)..where((t) => t.id.equals(id))).go();
   }
 }
