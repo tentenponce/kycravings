@@ -6,6 +6,7 @@ import 'package:kycravings/data/db/repositories/cravings_history_repository.dart
 import 'package:kycravings/data/db/repositories/cravings_repository.dart';
 import 'package:kycravings/data/db/repositories/ignored_cravings_repository.dart';
 import 'package:kycravings/domain/core/utils/date_time_utils.dart';
+import 'package:kycravings/domain/core/utils/random_utils.dart';
 import 'package:kycravings/domain/models/craving_model.dart';
 
 abstract interface class PredictUseCase {
@@ -19,6 +20,7 @@ class PredictUseCaseImpl implements PredictUseCase {
   final CravingsHistoryRepository _cravingsHistoryRepository;
   final IgnoredCravingsRepository _ignoredCravingsRepository;
   final DateTimeUtils _dateTimeUtils;
+  final RandomUtils _randomUtils;
 
   PredictUseCaseImpl(
     this._logger,
@@ -26,6 +28,7 @@ class PredictUseCaseImpl implements PredictUseCase {
     this._cravingsHistoryRepository,
     this._ignoredCravingsRepository,
     this._dateTimeUtils,
+    this._randomUtils,
   ) {
     _logger.logFor(this);
   }
@@ -59,7 +62,7 @@ class PredictUseCaseImpl implements PredictUseCase {
     );
 
     if (sameScoredCravings.length > 1) {
-      final randomScoredIndex = Random().nextInt(sameScoredCravings.length);
+      final randomScoredIndex = _randomUtils.randomizeInt(0, sameScoredCravings.length - 1);
       _logger.log(LogLevel.info, 'Randomly selecting from same scored cravings: $randomScoredIndex');
       return sameScoredCravings[randomScoredIndex].key;
     }
@@ -108,7 +111,7 @@ class PredictUseCaseImpl implements PredictUseCase {
 
   /// calculate the decay factor exponentially
   double _decayFactor(DateTime lastChosen) {
-    final duration = _dateTimeUtils.now().difference(lastChosen).inDays + 1;
+    final duration = _dateTimeUtils.now().difference(lastChosen).inDays;
 
     return exp(-0.1 * duration);
   }
