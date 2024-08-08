@@ -105,7 +105,7 @@ class CravingsHistoryRepositoryImpl
           createdAt: cravingCreatedAt,
           updatedAt: cravingUpdatedAt,
         ),
-        historyCount: historyCount,
+        preferenceCount: historyCount,
         lastChosen: lastChosen,
       );
     });

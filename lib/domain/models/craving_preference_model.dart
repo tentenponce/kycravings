@@ -7,19 +7,19 @@ part 'craving_preference_model.g.dart';
 @CopyWith()
 class CravingPreferenceModel extends Equatable {
   final CravingModel cravingModel;
-  final int historyCount;
-  final DateTime lastChosen;
+  final int preferenceCount;
+  final DateTime? lastChosen;
 
   const CravingPreferenceModel({
     required this.cravingModel,
-    required this.historyCount,
-    required this.lastChosen,
+    required this.preferenceCount,
+    this.lastChosen,
   });
 
   @override
   List<Object?> get props => [
         cravingModel,
-        historyCount,
+        preferenceCount,
         lastChosen,
       ];
 }

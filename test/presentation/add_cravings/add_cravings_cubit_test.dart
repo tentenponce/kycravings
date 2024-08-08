@@ -90,7 +90,26 @@ void main() {
       final addCravingResult = await unit.addCraving('sample craving name');
 
       expect(addCravingResult, true);
-      verify(mockCravingsRepository.insert('sample craving name', unit.state.categories)).called(1);
+      verify(mockCravingsRepository.insert('sample craving name', [])).called(1);
+    });
+
+    test('addCraving should insert craving with selected categories if all validations passed', () async {
+      final mockCategories = [
+        CategoryModel.empty.copyWith(id: 1),
+        CategoryModel.empty.copyWith(id: 2),
+      ];
+      when(mockCategoriesRepository.selectAll()).thenAnswer((_) async => mockCategories);
+      when(mockCravingsRepository.getCravingByName('sample craving name')).thenAnswer((_) async => null);
+
+      final unit = createUnitToTest();
+      await unit.init();
+
+      unit.onCategoryClick(1);
+
+      final addCravingResult = await unit.addCraving('sample craving name');
+
+      expect(addCravingResult, true);
+      verify(mockCravingsRepository.insert('sample craving name', [unit.state.categories.first])).called(1);
     });
 
     test('onCravingChanged should emit CravingError.empty if craving is empty string', () async {
