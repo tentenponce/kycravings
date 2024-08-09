@@ -28,10 +28,7 @@ class HomeCubit extends BaseCubit<HomeState> {
   }
 
   @override
-  Future<void> init() async {
-    final deletedCount = await _ignoredCravingsRepository.deletePreviousDays();
-    _logger.log(LogLevel.info, 'deleted $deletedCount ignored cravings');
-  }
+  Future<void> init() async {}
 
   Future<void> predict() async {
     unawaited(_firebaseAppAnalytics.logEvent(name: AnalyticsEvents.eventPredict));
