@@ -1,0 +1,20 @@
+// Define methods as usual
+def getDartDefines() {
+    def dartDefines = [:]
+    if (project.hasProperty('dart-defines')) {
+        // Decode dart-defines, which are comma-separated and encoded in Base64, and store them in a variable.
+        dartDefines = dartDefines + project.property('dart-defines')
+                .split(',')
+                .collectEntries { entry ->
+                    def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
+                    [(pair.first()): pair.last()]
+                }
+    }
+
+    return dartDefines
+}
+
+// Export methods by turning them into closures
+ext {
+    getDartDefines = this.&getDartDefines
+}

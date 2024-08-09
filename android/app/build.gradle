@@ -1,8 +1,24 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
+    id "com.google.gms.google-services"
+    id "com.google.firebase.crashlytics"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
+}
+
+apply from: "$rootDir/common.gradle"
+
+def dartDefines = getDartDefines()
+// get app id suffix
+def appIdSuffix = dartDefines.appIdSuffix != 'appIdSuffix' ? dartDefines.appIdSuffix : ''
+
+// create google services json file
+if (dartDefines.androidGoogleServicesJson?.trim()) {
+    def encoded = dartDefines.androidGoogleServicesJson
+    def decoded = new String(encoded.decodeBase64())
+    def googleServicesJsonFile = new File("app/google-services.json")
+    googleServicesJsonFile.write(decoded)
 }
 
 def localProperties = new Properties()
@@ -34,14 +50,15 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.kycravings"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
+        applicationId = dartDefines.appId
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
+
+        if (appIdSuffix?.trim()) {
+            applicationIdSuffix = appIdSuffix
+        }
 
         ndk {
         // Filter for architectures supported by Flutter. https://docs.flutter.dev/add-to-app/android/project-setup

@@ -36,6 +36,7 @@ migrate_working_dir/
 **/*.config.dart
 **/*.freezed.dart
 **/*.mocks.dart
+.env/**
 
 # Test related
 coverage
@@ -52,3 +53,17 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Signing Keys and Profiles
+*.jks
+*.jks.properties
+*.keystore
+*.keystore.properties
+*.mobileprovision
+*.p12
+*.p8
+*.pfx
+google-services.json
+GoogleService-Info.plist
+agconnect-services.json
+play-store-credentials.json

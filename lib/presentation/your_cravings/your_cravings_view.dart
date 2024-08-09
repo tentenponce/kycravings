@@ -51,7 +51,7 @@ class _YourCravingsView extends StatelessWidget {
                           onItemClick: () async {
                             final isUpdated = await Navigator.of(context).push(
                               MaterialPageRoute<bool?>(
-                                builder: (context) => UpdateCravingsView(),
+                                builder: (context) => const UpdateCravingsView(),
                                 settings: RouteSettings(arguments: craving),
                               ),
                             );
@@ -80,7 +80,7 @@ class _YourCravingsView extends StatelessWidget {
         onPressed: () async {
           final isAdded = await Navigator.of(context).push(
             MaterialPageRoute<bool?>(
-              builder: (context) => AddCravingsView(),
+              builder: (context) => const AddCravingsView(),
             ),
           );
 

@@ -38,7 +38,7 @@ class DrawerView extends StatelessWidget {
             ),
             onTap: () async => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => YourCravingsView(),
+                builder: (context) => const YourCravingsView(),
               ),
             ),
           ),
@@ -56,7 +56,7 @@ class DrawerView extends StatelessWidget {
             ),
             onTap: () async => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => CravingsHistoryView(),
+                builder: (context) => const CravingsHistoryView(),
               ),
             ),
           ),

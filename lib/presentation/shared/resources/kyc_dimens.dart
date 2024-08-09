@@ -40,7 +40,7 @@ abstract final class KycDimens {
   static const double radius5 = 20;
   static const double radius6 = 24;
   static const double radius7 = 30;
-  static const double radiusCircle = 100;
+  static const double radiusCircle = 300;
 
   static const double icon1 = 8;
   static const double icon2 = 16;
