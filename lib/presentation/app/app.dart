@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kycravings/presentation/home/home_view.dart';
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
+import 'package:kycravings/presentation/splash/splash_view.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -15,6 +16,7 @@ class App extends StatelessWidget {
       designSize: const Size(360, 640),
       minTextAdapt: true,
       child: MaterialApp(
+        navigatorKey: GetIt.instance<GlobalKey<NavigatorState>>(),
         localizationsDelegates: const [
           I18n.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -28,7 +30,7 @@ class App extends StatelessWidget {
           textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme),
           useMaterial3: true,
         ),
-        home: HomeView(),
+        home: const SplashView(),
       ),
     );
   }

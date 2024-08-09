@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kycravings/core/infrastructure/platform/firebase_app_analytics.dart';
 import 'package:kycravings/core/logging/logger.dart';
 import 'package:kycravings/data/db/repositories/cravings_history_repository.dart';
 import 'package:kycravings/data/db/repositories/ignored_cravings_repository.dart';
@@ -15,6 +16,7 @@ import 'home_cubit_test.mocks.dart';
   MockSpec<PredictUseCase>(),
   MockSpec<CravingsHistoryRepository>(),
   MockSpec<IgnoredCravingsRepository>(),
+  MockSpec<FirebaseAppAnalytics>(),
 ])
 void main() {
   group(HomeCubit, () {
@@ -22,11 +24,13 @@ void main() {
     late MockPredictUseCase mockPredictUseCase;
     late MockCravingsHistoryRepository mockCravingsHistoryRepository;
     late MockIgnoredCravingsRepository mockIgnoredCravingsRepository;
+    late MockFirebaseAppAnalytics mockFirebaseAppAnalytics;
     setUp(() {
       mockLogger = MockLogger();
       mockPredictUseCase = MockPredictUseCase();
       mockCravingsHistoryRepository = MockCravingsHistoryRepository();
       mockIgnoredCravingsRepository = MockIgnoredCravingsRepository();
+      mockFirebaseAppAnalytics = MockFirebaseAppAnalytics();
     });
 
     HomeCubit createUnitToTest() {
@@ -35,6 +39,7 @@ void main() {
         mockPredictUseCase,
         mockCravingsHistoryRepository,
         mockIgnoredCravingsRepository,
+        mockFirebaseAppAnalytics,
       );
     }
 
