@@ -4,11 +4,13 @@ import 'package:kycravings/data/db/core/repository.dart';
 import 'package:kycravings/data/db/cravings_database.dart';
 import 'package:kycravings/data/db/repositories/craving_category_repository.dart';
 import 'package:kycravings/data/db/tables/category_table.dart';
+import 'package:kycravings/data/responses/category_response.dart';
 import 'package:kycravings/domain/models/category_model.dart';
 
 abstract interface class CategoriesRepository implements Repository<CategoryTable, CategoryTableData> {
   Future<List<CategoryModel>> selectAll();
   Future<CategoryModel> insert(String categoryName);
+  Future<void> insertAll(Iterable<CategoryResponse> categories);
 
   /// remove categories from cravings and then remove the category
   void remove(int id);
@@ -56,6 +58,18 @@ class CategoriesRepositoryImpl extends BaseRepository<CravingsDatabase, Category
       createdAt: addedCategoryData.createdAt,
       updatedAt: addedCategoryData.updatedAt,
     );
+  }
+
+  @override
+  Future<void> insertAll(Iterable<CategoryResponse> categories) async {
+    return batch((batch) {
+      batch.insertAll(table, categories.map((category) {
+        return CategoryTableCompanion(
+          id: Value(category.id),
+          name: Value(category.name),
+        );
+      }));
+    });
   }
 
   @override

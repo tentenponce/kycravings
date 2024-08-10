@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kycravings/core/infrastructure/platform/environment_variables.dart';
 import 'package:kycravings/core/infrastructure/platform/firebase_app_analytics.dart';
+import 'package:kycravings/core/infrastructure/platform/firebase_app_remote_config.dart';
 import 'package:kycravings/core/logging/logger.dart';
 
 abstract interface class FirebaseAppCore {
@@ -13,11 +14,13 @@ class FirebaseAppCoreImpl implements FirebaseAppCore {
   final Logger _logger;
   final EnvironmentVariables _environmentVariables;
   final FirebaseAppAnalytics _firebaseAppAnalytics;
+  final FirebaseAppRemoteConfig _firebaseAppRemoteConfig;
 
   FirebaseAppCoreImpl(
     this._logger,
     this._environmentVariables,
     this._firebaseAppAnalytics,
+    this._firebaseAppRemoteConfig,
   ) {
     _logger.logFor(this);
   }
@@ -39,5 +42,6 @@ class FirebaseAppCoreImpl implements FirebaseAppCore {
     }
 
     await _firebaseAppAnalytics.init();
+    await _firebaseAppRemoteConfig.init();
   }
 }
