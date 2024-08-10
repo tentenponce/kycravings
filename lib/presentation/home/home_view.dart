@@ -5,6 +5,7 @@ import 'package:kycravings/presentation/drawer/drawer_view.dart';
 import 'package:kycravings/presentation/home/cubits/home_cubit.dart';
 import 'package:kycravings/presentation/home/states/home_state.dart';
 import 'package:kycravings/presentation/home/subviews/predict_button.dart';
+import 'package:kycravings/presentation/home/subviews/predicted_craving_view.dart';
 import 'package:kycravings/presentation/shared/assets/assets.gen.dart';
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
@@ -51,10 +52,7 @@ class _HomeView extends StatelessWidget {
           children: [
             BlocBuilder<HomeCubit, HomeState>(
               builder: (context, state) => state.predictedCraving != null
-                  ? Text(
-                      state.predictedCraving!.name,
-                      style: KycTextStyles.textStyle1Bold(),
-                    )
+                  ? PredictedCravingView(predictedCraving: state.predictedCraving!.name)
                   : const SizedBox(),
             ),
             const SizedBox(height: KycDimens.space6),
