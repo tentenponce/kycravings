@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kycravings/domain/models/category_model.dart';
 
 part 'craving_model.g.dart';

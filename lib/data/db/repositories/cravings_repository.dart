@@ -7,6 +7,7 @@ import 'package:kycravings/data/db/repositories/craving_category_repository.dart
 import 'package:kycravings/data/db/repositories/cravings_history_repository.dart';
 import 'package:kycravings/data/db/repositories/ignored_cravings_repository.dart';
 import 'package:kycravings/data/db/tables/craving_table.dart';
+import 'package:kycravings/data/responses/craving_response.dart';
 import 'package:kycravings/domain/models/category_model.dart';
 import 'package:kycravings/domain/models/craving_model.dart';
 
@@ -16,6 +17,7 @@ abstract interface class CravingsRepository implements Repository<CravingTable, 
   /// get craving without categories
   Future<CravingModel?> getCravingByName(String cravingName);
   Future<CravingModel> insert(String cravingName, Iterable<CategoryModel> categories);
+  Future<void> insertAll(Iterable<CravingResponse> cravings);
   Future<void> replace(CravingModel updatedCravingModel);
 
   /// remove craving and its categories on craving category junction table
@@ -149,6 +151,32 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
       createdAt: addedCravingData.createdAt,
       updatedAt: addedCravingData.updatedAt,
     );
+  }
+
+  @override
+  Future<void> insertAll(Iterable<CravingResponse> cravings) {
+    return transaction(() async {
+      await batch((batch) {
+        for (final craving in cravings) {
+          batch.insert(
+            table,
+            CravingTableCompanion(
+              id: Value(craving.id),
+              name: Value(craving.name),
+            ),
+          );
+        }
+      });
+
+      final cravingCategoryMap = <(int, int)>[];
+      for (final craving in cravings) {
+        for (final category in craving.categories) {
+          cravingCategoryMap.add((craving.id, category));
+        }
+      }
+
+      await _cravingCategoryRepository.insertAll(cravingCategoryMap);
+    });
   }
 
   @override
