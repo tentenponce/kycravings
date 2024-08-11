@@ -58,6 +58,7 @@ class HomeCubit extends BaseCubit<HomeState> {
     _isActualPredictingFinish = false;
     emit(state.copyWith(isPredicting: true));
 
+    // create an actual delay to finish loading animation
     unawaited(_delayUtils.delay(const Duration(seconds: 1)).then((_) {
       _isDelayPredictingFinish = true;
       _finishPredicting();
