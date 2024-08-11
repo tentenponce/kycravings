@@ -8,6 +8,7 @@ environment:
   sdk: '>=3.4.4 <4.0.0'
 
 dependencies:
+  auto_size_text: ^3.0.0
   copy_with_extension: ^5.0.4
   cupertino_icons: ^1.0.6
   drift: ^2.19.1+1

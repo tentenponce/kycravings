@@ -25,7 +25,7 @@ class DrawerView extends StatelessWidget {
                 Lottie.asset(Assets.lottie.logo, height: KycDimens.icon11),
                 Text(
                   I18n.of(context).drawerTitle,
-                  style: KycTextStyles.textStyle2Bold(color: KycColors.primary),
+                  style: KycTextStyles.textStyle3Bold(color: KycColors.primary),
                 ),
                 const SizedBox(height: KycDimens.space2),
               ],
@@ -34,7 +34,7 @@ class DrawerView extends StatelessWidget {
           ListTile(
             title: Text(
               I18n.of(context).drawerCravings,
-              style: KycTextStyles.textStyle3Reg(),
+              style: KycTextStyles.textStyle4Reg(),
             ),
             onTap: () async => Navigator.of(context).push(
               MaterialPageRoute(
@@ -44,15 +44,8 @@ class DrawerView extends StatelessWidget {
           ),
           ListTile(
             title: Text(
-              I18n.of(context).drawerCategory,
-              style: KycTextStyles.textStyle3Reg(),
-            ),
-            onTap: () => {},
-          ),
-          ListTile(
-            title: Text(
               I18n.of(context).drawerHistory,
-              style: KycTextStyles.textStyle3Reg(),
+              style: KycTextStyles.textStyle4Reg(),
             ),
             onTap: () async => Navigator.of(context).push(
               MaterialPageRoute(
@@ -63,7 +56,7 @@ class DrawerView extends StatelessWidget {
           ListTile(
             title: Text(
               I18n.of(context).drawerAbout,
-              style: KycTextStyles.textStyle3Reg(),
+              style: KycTextStyles.textStyle4Reg(),
             ),
             onTap: () => {},
           ),

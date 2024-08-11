@@ -25,12 +25,12 @@ abstract final class DialogUtils {
             backgroundColor: KycColors.white,
             title: Text(
               title ?? '',
-              style: KycTextStyles.textStyle3Bold(),
+              style: KycTextStyles.textStyle4Bold(),
             ),
             content: !StringUtils.isNullOrEmpty(message)
                 ? Text(
                     message!,
-                    style: KycTextStyles.textStyle4Reg(),
+                    style: KycTextStyles.textStyle5Reg(),
                   )
                 : const SizedBox(),
             actions: <Widget>[
@@ -69,7 +69,7 @@ abstract final class DialogUtils {
             backgroundColor: KycColors.white,
             title: Text(
               title ?? '',
-              style: KycTextStyles.textStyle3Bold(),
+              style: KycTextStyles.textStyle4Bold(),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,

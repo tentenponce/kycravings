@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kycravings/presentation/home/cubits/home_cubit.dart';
+import 'package:kycravings/presentation/home/states/home_state.dart';
 import 'package:kycravings/presentation/shared/assets/assets.gen.dart';
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_blurs.dart';
@@ -18,22 +19,12 @@ class PredictButton extends StatefulWidget {
 
 class _PredictButtonState extends State<PredictButton> {
   double _predictButtonRadius = KycDimens.predictRadiusRegular;
-  bool _loading = false;
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        setState(() {
-          context.read<HomeCubit>().predict();
-          _loading = true;
-          Future.delayed(
-            const Duration(milliseconds: 1000),
-            () => {if (mounted) setState(() => _loading = false)},
-          );
-        });
-      },
+      onTap: context.read<HomeCubit>().predict,
       onTapDown: (_) => setState(() {
-        _predictButtonRadius = KycDimens.predictRadiusSmall;
+        _predictButtonRadius = KycDimens.predictRadiusPressed;
       }),
       onTapUp: (_) => setState(() {
         _predictButtonRadius = KycDimens.predictRadiusRegular;
@@ -52,18 +43,25 @@ class _PredictButtonState extends State<PredictButton> {
           borderRadius: BorderRadius.circular(KycDimens.radiusCircle),
           boxShadow: KycBlurs.standardBlur,
         ),
-        child: AnimatedContainer(
-          alignment: Alignment.center,
-          height: _predictButtonRadius,
-          width: _predictButtonRadius,
-          duration: const Duration(milliseconds: 150),
-          child: _loading
-              ? Lottie.asset(Assets.lottie.bulb)
-              : Text(
-                  I18n.of(context).homePredictButton,
-                  style: KycTextStyles.textStyle1Bold(color: KycColors.primary),
-                ),
-        ),
+        child: BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
+          return AnimatedContainer(
+            alignment: Alignment.center,
+            height: state.predictedCraving == null ? _predictButtonRadius : KycDimens.predictRadiusSmall,
+            width: state.predictedCraving == null ? _predictButtonRadius : KycDimens.predictRadiusSmall,
+            duration: const Duration(milliseconds: 150),
+            child: state.isPredicting
+                ? Lottie.asset(Assets.lottie.bulb)
+                : Text(
+                    state.predictedCraving == null
+                        ? I18n.of(context).homePredictButton
+                        : I18n.of(context).homePredictAgainButton,
+                    style: state.predictedCraving == null
+                        ? KycTextStyles.textStyle2Bold(color: KycColors.primary)
+                        : KycTextStyles.textStyle5Bold(color: KycColors.primary),
+                    textAlign: TextAlign.center,
+                  ),
+          );
+        }),
       ),
     );
   }
