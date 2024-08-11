@@ -24,7 +24,7 @@ class HomeCubit extends BaseCubit<HomeState> {
   final FirebaseAppAnalytics _firebaseAppAnalytics;
   final DelayUtils _delayUtils;
 
-  bool isDonNotShowCravingSatisfiedDialogAgain = false;
+  bool isDoNotShowCravingSatisfiedDialogAgain = false;
 
   bool _isDelayPredictingFinish = false;
   bool _isActualPredictingFinish = false;
@@ -44,7 +44,7 @@ class HomeCubit extends BaseCubit<HomeState> {
 
   @override
   Future<void> init() async {
-    isDonNotShowCravingSatisfiedDialogAgain =
+    isDoNotShowCravingSatisfiedDialogAgain =
         await _appSharedPreferences.getValue<bool>(SharedPrefsKeys.doNotShowCravingSatisfiedDialogAgain) ?? false;
   }
 
@@ -100,7 +100,7 @@ class HomeCubit extends BaseCubit<HomeState> {
   }
 
   Future<void> doNotShowCravingSatisfiedDialogAgain({required bool isDontShowAgain}) async {
-    isDonNotShowCravingSatisfiedDialogAgain = isDontShowAgain;
+    isDoNotShowCravingSatisfiedDialogAgain = isDontShowAgain;
     await _appSharedPreferences.setValue(SharedPrefsKeys.doNotShowCravingSatisfiedDialogAgain, isDontShowAgain);
   }
 
