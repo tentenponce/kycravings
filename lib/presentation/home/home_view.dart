@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kycravings/domain/models/craving_model.dart';
 import 'package:kycravings/presentation/core/base/view_cubit_mixin.dart';
 import 'package:kycravings/presentation/drawer/drawer_view.dart';
 import 'package:kycravings/presentation/home/cubits/home_cubit.dart';
 import 'package:kycravings/presentation/home/states/home_state.dart';
+import 'package:kycravings/presentation/home/subviews/craving_satisfied_view.dart';
 import 'package:kycravings/presentation/home/subviews/predict_button.dart';
+import 'package:kycravings/presentation/home/subviews/predicted_craving_view.dart';
 import 'package:kycravings/presentation/shared/assets/assets.gen.dart';
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_dimens.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_text_styles.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_app_bar.dart';
-import 'package:kycravings/presentation/shared/widgets/kyc_button_filled.dart';
 import 'package:lottie/lottie.dart';
 
 class HomeView extends StatelessWidget with ViewCubitMixin<HomeCubit> {
@@ -45,36 +47,48 @@ class _HomeView extends StatelessWidget {
         ),
         onLeadingIconClick: () => scaffoldKey.currentState?.openDrawer(),
       ),
-      body: Center(
+      body: AnimatedSize(
+        duration: const Duration(milliseconds: 1000),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             BlocBuilder<HomeCubit, HomeState>(
-              builder: (context, state) => state.predictedCraving != null
-                  ? Text(
-                      state.predictedCraving!.name,
-                      style: KycTextStyles.textStyle1Bold(),
-                    )
-                  : const SizedBox(),
+              builder: (context, state) => Expanded(
+                flex: state.predictedCraving != null ? 1 : 0,
+                child: const SizedBox(),
+              ),
             ),
-            const SizedBox(height: KycDimens.space6),
-            KycButtonFilled(onPressed: context.read<HomeCubit>().chooseCraving, title: 'Craving Satisfied!'),
+            BlocBuilder<HomeCubit, HomeState>(
+              builder: (context, state) => SizedBox(
+                height: state.predictedCraving != null ? null : 0,
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 300),
+                  opacity: state.predictedCraving != null ? 1 : 0,
+                  child: PredictedCravingView(predictedCraving: state.predictedCraving ?? CravingModel.empty),
+                ),
+              ),
+            ),
+            const CravingSatisfiedView(),
             const SizedBox(height: KycDimens.space6),
             const PredictButton(),
             const SizedBox(height: KycDimens.space6),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Lottie.asset(
-                  Assets.lottie.vibrate,
-                  width: KycDimens.icon5,
-                ),
-                Text(
-                  I18n.of(context).homeShakeYourPhone,
-                  style: KycTextStyles.textStyle5Reg(),
-                ),
-              ],
-            ),
+            BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
+              return state.predictedCraving == null
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Lottie.asset(
+                          Assets.lottie.vibrate,
+                          width: KycDimens.icon5,
+                        ),
+                        Text(
+                          I18n.of(context).homeShakeYourPhone,
+                          style: KycTextStyles.textStyle6Reg(),
+                        )
+                      ],
+                    )
+                  : const SizedBox();
+            }),
           ],
         ),
       ),

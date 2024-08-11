@@ -63,13 +63,13 @@ class _UpdateCravingsView extends StatelessWidget {
                     CravingError.duplicate => I18n.of(context).addCravingsErrorDuplicate(_cravingController.text),
                     CravingError.none => '',
                   },
-                  style: KycTextStyles.textStyle5Reg().copyWith(color: KycColors.red),
+                  style: KycTextStyles.textStyle6Reg().copyWith(color: KycColors.red),
                 );
               }),
               const SizedBox(height: KycDimens.space7),
               Text(
                 I18n.of(context).addCravingsCategoryListTitle,
-                style: KycTextStyles.textStyle5Reg(),
+                style: KycTextStyles.textStyle6Reg(),
               ),
               const SizedBox(height: KycDimens.space5),
               BlocBuilder<UpdateCravingsCubit, UpdateCravingsState>(
@@ -108,7 +108,7 @@ class _UpdateCravingsView extends StatelessWidget {
               const SizedBox(height: KycDimens.space5),
               Text(
                 I18n.of(context).addCravingsCategoryListMessage,
-                style: KycTextStyles.textStyle5Reg(),
+                style: KycTextStyles.textStyle6Reg(),
               ),
             ],
           ),
@@ -186,7 +186,7 @@ class _UpdateCravingsView extends StatelessWidget {
                 I18n.of(context).addCravingsCategoryDialogErrorDuplicate(_categoryController.text),
               CategoryError.none => '',
             },
-            style: KycTextStyles.textStyle5Reg().copyWith(color: KycColors.red),
+            style: KycTextStyles.textStyle6Reg().copyWith(color: KycColors.red),
           );
         },
       ),

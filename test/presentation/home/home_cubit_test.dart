@@ -1,11 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kycravings/core/infrastructure/constants/shared_prefs_keys.dart';
 import 'package:kycravings/core/infrastructure/platform/firebase_app_analytics.dart';
 import 'package:kycravings/core/logging/logger.dart';
 import 'package:kycravings/data/db/repositories/cravings_history_repository.dart';
 import 'package:kycravings/data/db/repositories/ignored_cravings_repository.dart';
+import 'package:kycravings/data/local/app_shared_preferences.dart';
 import 'package:kycravings/domain/models/craving_model.dart';
 import 'package:kycravings/domain/use_cases/predict_use_case.dart';
 import 'package:kycravings/presentation/home/cubits/home_cubit.dart';
+import 'package:kycravings/presentation/shared/utils/delay_utils.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -16,7 +19,9 @@ import 'home_cubit_test.mocks.dart';
   MockSpec<PredictUseCase>(),
   MockSpec<CravingsHistoryRepository>(),
   MockSpec<IgnoredCravingsRepository>(),
+  MockSpec<AppSharedPreferences>(),
   MockSpec<FirebaseAppAnalytics>(),
+  MockSpec<DelayUtils>(),
 ])
 void main() {
   group(HomeCubit, () {
@@ -24,13 +29,19 @@ void main() {
     late MockPredictUseCase mockPredictUseCase;
     late MockCravingsHistoryRepository mockCravingsHistoryRepository;
     late MockIgnoredCravingsRepository mockIgnoredCravingsRepository;
+    late MockAppSharedPreferences mockAppSharedPreferences;
     late MockFirebaseAppAnalytics mockFirebaseAppAnalytics;
-    setUp(() {
+    late MockDelayUtils mockDelayUtils;
+    setUp(() async {
       mockLogger = MockLogger();
       mockPredictUseCase = MockPredictUseCase();
       mockCravingsHistoryRepository = MockCravingsHistoryRepository();
       mockIgnoredCravingsRepository = MockIgnoredCravingsRepository();
+      mockAppSharedPreferences = MockAppSharedPreferences();
       mockFirebaseAppAnalytics = MockFirebaseAppAnalytics();
+      mockDelayUtils = MockDelayUtils();
+
+      when(mockDelayUtils.delay(any)).thenAnswer((_) async {});
     });
 
     HomeCubit createUnitToTest() {
@@ -39,7 +50,9 @@ void main() {
         mockPredictUseCase,
         mockCravingsHistoryRepository,
         mockIgnoredCravingsRepository,
+        mockAppSharedPreferences,
         mockFirebaseAppAnalytics,
+        mockDelayUtils,
       );
     }
 
@@ -84,6 +97,18 @@ void main() {
       await unit.chooseCraving();
 
       expect(unit.state.predictedCraving, null);
+    });
+
+    test('doNotShowCravingSatisfiedDialogAgain should set to shared preferences', () async {
+      when(mockAppSharedPreferences.getValue<bool>(SharedPrefsKeys.doNotShowCravingSatisfiedDialogAgain))
+          .thenAnswer((_) async => false);
+
+      final unit = createUnitToTest();
+      await unit.init();
+      await unit.doNotShowCravingSatisfiedDialogAgain(isDontShowAgain: true);
+
+      await expectLater(unit.isDoNotShowCravingSatisfiedDialogAgain, true);
+      verify(mockAppSharedPreferences.setValue(SharedPrefsKeys.doNotShowCravingSatisfiedDialogAgain, true)).called(1);
     });
   });
 }

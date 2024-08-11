@@ -7,5 +7,6 @@ part 'home_state.freezed.dart';
 class HomeState with _$HomeState {
   const factory HomeState.on({
     @Default(null) CravingModel? predictedCraving,
+    @Default(false) bool isPredicting,
   }) = _HomeState;
 }

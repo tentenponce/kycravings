@@ -34,7 +34,7 @@ class KycTag extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: KycTextStyles.textStyle4Reg(color: isSelected ? KycColors.white : KycColors.primary),
+          style: KycTextStyles.textStyle5Reg(color: isSelected ? KycColors.white : KycColors.primary),
         ),
       ),
     );

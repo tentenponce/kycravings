@@ -33,7 +33,7 @@ class KycAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         title,
         textAlign: TextAlign.center,
-        style: KycTextStyles.textStyle1Bold(color: KycColors.white),
+        style: KycTextStyles.textStyle2Bold(color: KycColors.white),
       ),
       centerTitle: true,
     );

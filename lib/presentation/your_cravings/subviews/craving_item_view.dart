@@ -29,7 +29,7 @@ abstract final class CravingItemView {
               children: [
                 Text(
                   cravingModel.name,
-                  style: KycTextStyles.textStyle3Bold(),
+                  style: KycTextStyles.textStyle4Bold(),
                 ),
                 const SizedBox(height: KycDimens.space3),
                 SizedBox(
@@ -44,7 +44,7 @@ abstract final class CravingItemView {
                 const SizedBox(height: KycDimens.space3),
                 Text(
                   I18n.of(context).yourCravingsDateMessage(GetIt.instance<DateTimeUtils>().ago(cravingModel.updatedAt)),
-                  style: KycTextStyles.textStyle5Reg(),
+                  style: KycTextStyles.textStyle6Reg(),
                 ),
               ],
             ),

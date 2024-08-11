@@ -10,7 +10,7 @@ abstract final class KycTextStyles {
   }) {
     return GoogleFonts.inter(
       color: color,
-      fontSize: KycDimens.font7.sp,
+      fontSize: KycDimens.font9.sp,
       fontWeight: FontWeight.w700,
     );
   }
@@ -20,18 +20,8 @@ abstract final class KycTextStyles {
   }) {
     return GoogleFonts.inter(
       color: color,
-      fontSize: KycDimens.font5.sp,
+      fontSize: KycDimens.font7.sp,
       fontWeight: FontWeight.w700,
-    );
-  }
-
-  static TextStyle textStyle3Reg({
-    Color color = KycColors.black,
-  }) {
-    return GoogleFonts.inter(
-      color: color,
-      fontSize: KycDimens.font3.sp,
-      fontWeight: FontWeight.w400,
     );
   }
 
@@ -40,7 +30,7 @@ abstract final class KycTextStyles {
   }) {
     return GoogleFonts.inter(
       color: color,
-      fontSize: KycDimens.font3.sp,
+      fontSize: KycDimens.font5.sp,
       fontWeight: FontWeight.w700,
     );
   }
@@ -50,8 +40,18 @@ abstract final class KycTextStyles {
   }) {
     return GoogleFonts.inter(
       color: color,
-      fontSize: KycDimens.font2.sp,
+      fontSize: KycDimens.font3.sp,
       fontWeight: FontWeight.w400,
+    );
+  }
+
+  static TextStyle textStyle4Bold({
+    Color color = KycColors.black,
+  }) {
+    return GoogleFonts.inter(
+      color: color,
+      fontSize: KycDimens.font3.sp,
+      fontWeight: FontWeight.w700,
     );
   }
 
@@ -60,8 +60,38 @@ abstract final class KycTextStyles {
   }) {
     return GoogleFonts.inter(
       color: color,
+      fontSize: KycDimens.font2.sp,
+      fontWeight: FontWeight.w400,
+    );
+  }
+
+  static TextStyle textStyle5Bold({
+    Color color = KycColors.black,
+  }) {
+    return GoogleFonts.inter(
+      color: color,
+      fontSize: KycDimens.font2.sp,
+      fontWeight: FontWeight.w700,
+    );
+  }
+
+  static TextStyle textStyle6Reg({
+    Color color = KycColors.black,
+  }) {
+    return GoogleFonts.inter(
+      color: color,
       fontSize: KycDimens.font1.sp,
       fontWeight: FontWeight.w400,
+    );
+  }
+
+  static TextStyle textStyle6Bold({
+    Color color = KycColors.black,
+  }) {
+    return GoogleFonts.inter(
+      color: color,
+      fontSize: KycDimens.font1.sp,
+      fontWeight: FontWeight.w700,
     );
   }
 }
