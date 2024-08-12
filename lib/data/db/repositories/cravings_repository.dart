@@ -12,7 +12,7 @@ import 'package:kycravings/domain/models/category_model.dart';
 import 'package:kycravings/domain/models/craving_model.dart';
 
 abstract interface class CravingsRepository implements Repository<CravingTable, CravingTableData> {
-  Future<List<CravingModel>> selectWithCategories();
+  Future<List<CravingModel>> selectWithCategories({int? categoryFilter});
 
   /// get craving without categories
   Future<CravingModel?> getCravingByName(String cravingName);
@@ -43,8 +43,13 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
   }
 
   @override
-  Future<List<CravingModel>> selectWithCategories() async {
-    const customQuery = 'SELECT '
+  Future<List<CravingModel>> selectWithCategories({int? categoryFilter}) async {
+    final categoryFilterQuery = 'WHERE craving_id IN '
+        '(SELECT craving_table.id FROM craving_table '
+        'LEFT JOIN craving_category_table ON craving_table.id=craving_category_table.craving_id '
+        'WHERE craving_category_table.category_id=$categoryFilter) ';
+
+    final customQuery = 'SELECT '
         'craving_table.id as craving_id, '
         'craving_table.name as craving_name, '
         'craving_table.created_at as craving_created_at, '
@@ -57,7 +62,10 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
         // right join to get all cravings even if it doesn't have a category
         'RIGHT JOIN craving_table ON craving_category_table.craving_id=craving_table.id '
         'LEFT JOIN category_table ON craving_category_table.category_id=category_table.id '
+        '${categoryFilter != null ? categoryFilterQuery : ''} '
         'ORDER BY craving_table.created_at DESC';
+
+    _logger.log(LogLevel.debug, 'selectWithCategories query: $customQuery');
 
     final results = await customSelect(customQuery).get();
 
