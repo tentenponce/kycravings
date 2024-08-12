@@ -8,5 +8,6 @@ class HomeState with _$HomeState {
   const factory HomeState.on({
     @Default(null) CravingModel? predictedCraving,
     @Default(false) bool isPredicting,
+    @Default(false) bool isSwipePredicting,
   }) = _HomeState;
 }

@@ -64,7 +64,10 @@ class _HomeView extends StatelessWidget {
                 child: AnimatedOpacity(
                   duration: const Duration(milliseconds: 300),
                   opacity: state.predictedCraving != null ? 1 : 0,
-                  child: PredictedCravingView(predictedCraving: state.predictedCraving ?? CravingModel.empty),
+                  child: PredictedCravingView(
+                    predictedCraving: state.predictedCraving ?? CravingModel.empty,
+                    isSwipePredicting: state.isSwipePredicting,
+                  ),
                 ),
               ),
             ),

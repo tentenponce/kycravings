@@ -8,10 +8,12 @@ import 'package:kycravings/core/logging/logger.dart';
 import 'package:kycravings/data/db/repositories/cravings_history_repository.dart';
 import 'package:kycravings/data/db/repositories/ignored_cravings_repository.dart';
 import 'package:kycravings/data/local/app_shared_preferences.dart';
+import 'package:kycravings/domain/core/utils/random_utils.dart';
 import 'package:kycravings/domain/models/craving_model.dart';
 import 'package:kycravings/domain/use_cases/predict_use_case.dart';
 import 'package:kycravings/presentation/core/base/base_cubit.dart';
 import 'package:kycravings/presentation/home/states/home_state.dart';
+import 'package:kycravings/presentation/shared/utils/debouncer_utils.dart';
 import 'package:kycravings/presentation/shared/utils/delay_utils.dart';
 
 @injectable
@@ -23,6 +25,8 @@ class HomeCubit extends BaseCubit<HomeState> {
   final AppSharedPreferences _appSharedPreferences;
   final FirebaseAppAnalytics _firebaseAppAnalytics;
   final DelayUtils _delayUtils;
+  final RandomUtils _randomUtils;
+  final DebouncerUtils _swipePredictDebouncerUtils;
 
   bool isDoNotShowCravingSatisfiedDialogAgain = false;
 
@@ -38,8 +42,11 @@ class HomeCubit extends BaseCubit<HomeState> {
     this._appSharedPreferences,
     this._firebaseAppAnalytics,
     this._delayUtils,
+    this._randomUtils,
+    this._swipePredictDebouncerUtils,
   ) : super(const HomeState.on()) {
     _logger.logFor(this);
+    _swipePredictDebouncerUtils.setMilliseconds(100);
   }
 
   @override
@@ -49,14 +56,14 @@ class HomeCubit extends BaseCubit<HomeState> {
   }
 
   Future<void> predict() async {
-    if (state.isPredicting) {
+    if (state.isPredicting || state.isSwipePredicting) {
       return;
     }
 
     _predictedModel = null;
     _isDelayPredictingFinish = false;
     _isActualPredictingFinish = false;
-    emit(state.copyWith(isPredicting: true));
+    emit(state.copyWith(isPredicting: true, isSwipePredicting: true));
 
     // create an actual delay to finish loading animation
     unawaited(_delayUtils.delay(const Duration(seconds: 1)).then((_) {
@@ -66,16 +73,7 @@ class HomeCubit extends BaseCubit<HomeState> {
 
     unawaited(_firebaseAppAnalytics.logEvent(name: AnalyticsEvents.eventPredict));
     // if there is a predicted craving, threat it as ignored and add to ignored cravings
-    if (state.predictedCraving != null) {
-      unawaited(_firebaseAppAnalytics.logEvent(
-        name: AnalyticsEvents.eventIgnoreCraving,
-        parameters: {
-          AnalyticsEvents.paramCraving: state.predictedCraving!.name,
-        },
-      ));
-      _logger.log(LogLevel.debug, 'ignoring craving: ${state.predictedCraving!.name}');
-      await _ignoredCravingsRepository.insert(state.predictedCraving!);
-    }
+    await _ignoreCraving();
 
     final craving = await _predictUseCase.predict();
 
@@ -84,6 +82,31 @@ class HomeCubit extends BaseCubit<HomeState> {
     _isActualPredictingFinish = true;
     _predictedModel = craving;
     _finishPredicting();
+  }
+
+  Future<void> onSwipePrediction() async {
+    if (state.isSwipePredicting || state.isPredicting) {
+      return;
+    }
+
+    unawaited(_firebaseAppAnalytics.logEvent(name: AnalyticsEvents.eventswipePredict));
+
+    _swipePredictDebouncerUtils.run(() async {
+      emit(state.copyWith(isSwipePredicting: true));
+
+      // create an actual delay to finish shimmer animation
+      await _delayUtils.delay(const Duration(seconds: 1)).then((_) {});
+
+      final randomizedCategory = state.predictedCraving!.categories
+          .toList()[_randomUtils.randomizeInt(0, state.predictedCraving!.categories.length - 1)];
+
+      // if there is a predicted craving, threat it as ignored and add to ignored cravings
+      await _ignoreCraving();
+
+      final predictedCraving = await _predictUseCase.predict(categoryFilter: randomizedCategory.id);
+
+      emit(state.copyWith(predictedCraving: predictedCraving, isSwipePredicting: false));
+    });
   }
 
   Future<void> chooseCraving() async {
@@ -106,7 +129,25 @@ class HomeCubit extends BaseCubit<HomeState> {
 
   void _finishPredicting() {
     if (_isActualPredictingFinish && _isDelayPredictingFinish) {
-      emit(state.copyWith(predictedCraving: _predictedModel, isPredicting: false));
+      emit(state.copyWith(
+        predictedCraving: _predictedModel,
+        isPredicting: false,
+        isSwipePredicting: false,
+      ));
+    }
+  }
+
+  Future<void> _ignoreCraving() async {
+    // if there is a predicted craving, threat it as ignored and add to ignored cravings
+    if (state.predictedCraving != null) {
+      unawaited(_firebaseAppAnalytics.logEvent(
+        name: AnalyticsEvents.eventIgnoreCraving,
+        parameters: {
+          AnalyticsEvents.paramCraving: state.predictedCraving!.name,
+        },
+      ));
+      _logger.log(LogLevel.debug, 'ignoring craving: ${state.predictedCraving!.name}');
+      await _ignoredCravingsRepository.insert(state.predictedCraving!);
     }
   }
 }

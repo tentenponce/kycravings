@@ -10,7 +10,7 @@ import 'package:kycravings/domain/core/utils/random_utils.dart';
 import 'package:kycravings/domain/models/craving_model.dart';
 
 abstract interface class PredictUseCase {
-  Future<CravingModel> predict();
+  Future<CravingModel> predict({int? categoryFilter});
 }
 
 @LazySingleton(as: PredictUseCase)
@@ -34,8 +34,8 @@ class PredictUseCaseImpl implements PredictUseCase {
   }
 
   @override
-  Future<CravingModel> predict() async {
-    final cravings = await _cravingsRepository.selectWithCategories();
+  Future<CravingModel> predict({int? categoryFilter}) async {
+    final cravings = await _cravingsRepository.selectWithCategories(categoryFilter: categoryFilter);
     final scoredItems = <CravingModel, double>{};
 
     for (final craving in cravings) {
