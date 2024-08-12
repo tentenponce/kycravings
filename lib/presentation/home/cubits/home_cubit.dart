@@ -85,7 +85,7 @@ class HomeCubit extends BaseCubit<HomeState> {
   }
 
   Future<void> onSwipePrediction() async {
-    if (state.isSwipePredicting || state.isPredicting) {
+    if (state.predictedCraving == null || state.isSwipePredicting || state.isPredicting) {
       return;
     }
 
@@ -95,7 +95,7 @@ class HomeCubit extends BaseCubit<HomeState> {
       emit(state.copyWith(isSwipePredicting: true));
 
       // create an actual delay to finish shimmer animation
-      await _delayUtils.delay(const Duration(seconds: 1)).then((_) {});
+      await _delayUtils.delay(const Duration(seconds: 1));
 
       final randomizedCategory = state.predictedCraving!.categories
           .toList()[_randomUtils.randomizeInt(0, state.predictedCraving!.categories.length - 1)];
