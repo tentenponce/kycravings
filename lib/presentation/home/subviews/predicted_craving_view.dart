@@ -26,7 +26,7 @@ class PredictedCravingView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onPanUpdate: (details) {
-        // Swiping in right direction.
+        // Swiping in left or right direction
         if (details.delta.dx > 0 || details.delta.dx < 0) {
           unawaited(context.read<HomeCubit>().onSwipePrediction());
         }
