@@ -62,7 +62,7 @@ class PredictedCravingView extends StatelessWidget {
                             )
                           : Shimmer.fromColors(
                               baseColor: KycColors.lightGray,
-                              highlightColor: KycColors.neutral95,
+                              highlightColor: KycColors.shimmerHighlight,
                               period: const Duration(milliseconds: 1000),
                               child: Container(
                                 height: KycDimens.predictShimmerHeight,
