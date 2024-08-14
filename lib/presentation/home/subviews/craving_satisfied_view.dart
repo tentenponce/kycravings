@@ -88,6 +88,10 @@ class _CravingSatisfiedViewState extends State<CravingSatisfiedView> with Ticker
                                   await context.read<HomeCubit>().chooseCraving();
                                   await Future<void>.delayed(const Duration(milliseconds: 300));
                                   _resetState();
+
+                                  // reset controller to avoid duplicate chosen craving
+                                  _checkController.dispose();
+                                  _checkController = AnimationController(vsync: this);
                                 }
                               });
                           },
