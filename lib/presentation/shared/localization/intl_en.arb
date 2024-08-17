@@ -35,6 +35,7 @@
     "addCravingsCategoryDeleteDialogMessage": "Are you sure you want to delete {categoryName}? This category will be deleted from other cravings as well.",
     "updateCravingsTitle": "Update Cravings",
     "cravingsHistoryTitle": "Cravings History",
+    "cravingHistoryEmpty": "No cravings history yet. Go to home page and predict to satisfy your cravings!",
     "cravingsHistoryDeleteDialogTitle": "Delete Craving History",
     "cravingsHistoryDeleteDialogMessage": "Are you sure you want to delete this history?",
     "cravingsHistoryDateMessage": "Craved {ago}",

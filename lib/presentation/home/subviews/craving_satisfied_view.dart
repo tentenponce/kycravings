@@ -116,7 +116,7 @@ class _CravingSatisfiedViewState extends State<CravingSatisfiedView> with Ticker
   }
 
   Future<void> _onCravingSatisfied() async {
-    if (context.read<HomeCubit>().isDoNotShowCravingSatisfiedDialogAgain) {
+    if (!context.read<HomeCubit>().isDoNotShowCravingSatisfiedDialogAgain) {
       final result = await showDialog<Map<String, dynamic>>(
           context: context, builder: (context) => const CravingSatisfiedDialog());
 

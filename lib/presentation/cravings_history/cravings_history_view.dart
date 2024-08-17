@@ -11,6 +11,7 @@ import 'package:kycravings/presentation/cravings_history/subviews/craving_histor
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_dimens.dart';
+import 'package:kycravings/presentation/shared/resources/kyc_text_styles.dart';
 import 'package:kycravings/presentation/shared/utils/dialog_utils.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_app_bar.dart';
 
@@ -76,30 +77,38 @@ class _CravingsHistoryViewState extends State<_CravingsHistoryView> {
         child: BlocBuilder<CravingsHistoryCubit, CravingsHistoryState>(
           builder: (context, state) {
             return !state.isLoading
-                ? Container(
-                    padding: const EdgeInsets.symmetric(vertical: KycDimens.space6),
-                    child: Table(
-                      columnWidths: const {
-                        0: FlexColumnWidth(1),
-                        1: FixedColumnWidth(KycDimens.space15),
-                      },
-                      children: state.cravingsHistory
-                          .map((cravingHistory) => CravingHistoryItemView.build(
-                                context,
-                                cravingHistoryModel: cravingHistory,
-                                onDeleteClick: () async => DialogUtils.showConfirmDialog(
-                                  context: context,
-                                  title: I18n.of(context).cravingsHistoryDeleteDialogTitle,
-                                  message: I18n.of(context).cravingsHistoryDeleteDialogMessage,
-                                  onOk: () {
-                                    context.read<CravingsHistoryCubit>().onCravingDelete(cravingHistory.id);
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ))
-                          .toList(),
-                    ),
-                  )
+                ? state.cravingsHistory.isNotEmpty
+                    ? Container(
+                        padding: const EdgeInsets.symmetric(vertical: KycDimens.space6),
+                        child: Table(
+                          columnWidths: const {
+                            0: FlexColumnWidth(1),
+                            1: FixedColumnWidth(KycDimens.space15),
+                          },
+                          children: state.cravingsHistory
+                              .map((cravingHistory) => CravingHistoryItemView.build(
+                                    context,
+                                    cravingHistoryModel: cravingHistory,
+                                    onDeleteClick: () async => DialogUtils.showConfirmDialog(
+                                      context: context,
+                                      title: I18n.of(context).cravingsHistoryDeleteDialogTitle,
+                                      message: I18n.of(context).cravingsHistoryDeleteDialogMessage,
+                                      onOk: () {
+                                        context.read<CravingsHistoryCubit>().onCravingDelete(cravingHistory.id);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(KycDimens.space10),
+                        child: Text(
+                          I18n.of(context).cravingHistoryEmpty,
+                          style: KycTextStyles.textStyle6Reg(),
+                        ),
+                      )
                 : const Column(
                     children: [
                       SizedBox(height: KycDimens.space6),
