@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
-import 'package:kycravings/domain/core/utils/date_time_utils.dart';
 import 'package:kycravings/domain/models/craving_model.dart';
 import 'package:kycravings/presentation/add_cravings_history/cubits/add_cravings_history_cubit.dart';
-import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_dimens.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_text_styles.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_tag.dart';
@@ -70,11 +67,6 @@ class AddCravingsHistoryItemView extends StatelessWidget {
                 children:
                     cravingModel.categories.map((category) => KycTag(label: category.name, isSelected: false)).toList(),
               ),
-            ),
-            const SizedBox(height: KycDimens.space3),
-            Text(
-              I18n.of(context).yourCravingsDateMessage(GetIt.instance<DateTimeUtils>().ago(cravingModel.updatedAt)),
-              style: KycTextStyles.textStyle6Reg(),
             ),
           ],
         ),
