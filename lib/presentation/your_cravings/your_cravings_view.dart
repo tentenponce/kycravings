@@ -69,6 +69,7 @@ class _YourCravingsViewState extends State<_YourCravingsView> {
         onLeadingIconClick: () => Navigator.of(context).pop(),
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: KycDimens.space14),
         physics: const AlwaysScrollableScrollPhysics(),
         controller: _scrollController,
         child: Container(

@@ -31,7 +31,7 @@ class _AddCravingsView extends StatelessWidget {
     return Scaffold(
       backgroundColor: KycColors.white,
       appBar: KycAppBar(
-        title: I18n.of(context).yourCravingsTitle,
+        title: I18n.of(context).addCravingsTitle,
         leadingIcon: const Icon(
           Icons.arrow_back,
           color: KycColors.white,

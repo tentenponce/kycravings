@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kycravings/presentation/add_cravings_history/add_cravings_history_view.dart';
 import 'package:kycravings/presentation/core/base/view_cubit_mixin.dart';
 import 'package:kycravings/presentation/cravings_history/cubits/cravings_history_cubit.dart';
 import 'package:kycravings/presentation/cravings_history/states/cravings_history_state.dart';
@@ -69,6 +70,7 @@ class _CravingsHistoryViewState extends State<_CravingsHistoryView> {
         onLeadingIconClick: () => Navigator.of(context).pop(),
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: KycDimens.space14),
         physics: const AlwaysScrollableScrollPhysics(),
         controller: _scrollController,
         child: BlocBuilder<CravingsHistoryCubit, CravingsHistoryState>(
@@ -111,6 +113,24 @@ class _CravingsHistoryViewState extends State<_CravingsHistoryView> {
                   );
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final isAdded = await Navigator.of(context).push(
+            MaterialPageRoute<bool?>(
+              builder: (context) => const AddCravingsHistoryView(),
+            ),
+          );
+
+          if ((isAdded ?? false) && context.mounted) {
+            await context.read<CravingsHistoryCubit>().getCravings();
+          }
+        },
+        backgroundColor: KycColors.primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(KycDimens.radiusCircle),
+        ),
+        child: const Icon(Icons.add, color: KycColors.white),
       ),
     );
   }
