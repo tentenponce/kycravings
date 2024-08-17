@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kycravings/presentation/about/about_view.dart';
 import 'package:kycravings/presentation/cravings_history/cravings_history_view.dart';
 import 'package:kycravings/presentation/shared/assets/assets.gen.dart';
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
@@ -58,7 +59,11 @@ class DrawerView extends StatelessWidget {
               I18n.of(context).drawerAbout,
               style: KycTextStyles.textStyle4Reg(),
             ),
-            onTap: () => {},
+            onTap: () async => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const AboutView(),
+              ),
+            ),
           ),
         ],
       ),
