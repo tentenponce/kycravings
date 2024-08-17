@@ -25,7 +25,7 @@ abstract interface class CravingsRepository implements Repository<CravingTable, 
   Future<void> replace(CravingModel updatedCravingModel);
 
   /// remove craving and its categories on craving category junction table
-  void remove(int id);
+  Future<void> remove(int id);
 }
 
 @LazySingleton(as: CravingsRepository)
@@ -211,11 +211,10 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
     await _cravingCategoryRepository.insertAll(cravingCategoryMap);
 
     final isSuccess = await update(table).replace(
-      CravingTableData(
-        id: updatedCravingModel.id,
-        name: updatedCravingModel.name,
-        createdAt: updatedCravingModel.createdAt,
-        updatedAt: updatedCravingModel.updatedAt,
+      CravingTableCompanion(
+        id: Value(updatedCravingModel.id),
+        name: Value(updatedCravingModel.name),
+        createdAt: Value(updatedCravingModel.createdAt),
       ),
     );
 

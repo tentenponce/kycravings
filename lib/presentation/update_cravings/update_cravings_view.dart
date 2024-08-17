@@ -127,9 +127,11 @@ class _UpdateCravingsView extends StatelessWidget {
                   title: I18n.of(context).yourCravingsDeleteDialogTitle,
                   message: I18n.of(context)
                       .yourCravingsDeleteDialogMessage(context.read<UpdateCravingsCubit>().state.cravingModel.name),
-                  onOk: () {
-                    context.read<UpdateCravingsCubit>().deleteCraving();
-                    Navigator.pop(context);
+                  onOk: () async {
+                    Navigator.pop(context); // pop dialog
+                    if (await context.read<UpdateCravingsCubit>().deleteCraving() && context.mounted) {
+                      Navigator.pop(context, true);
+                    }
                   },
                 ),
                 backgroundColor: KycColors.white,

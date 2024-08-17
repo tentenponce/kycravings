@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kycravings/core/infrastructure/platform/firebase_app_analytics.dart';
 import 'package:kycravings/data/db/repositories/categories_repository.dart';
 import 'package:kycravings/data/db/repositories/cravings_repository.dart';
 import 'package:kycravings/domain/models/category_model.dart';
@@ -18,16 +19,19 @@ import 'update_cravings_cubit_test.mocks.dart';
   MockSpec<CravingsRepository>(),
   MockSpec<CategoriesRepository>(),
   MockSpec<DebouncerUtils>(),
+  MockSpec<FirebaseAppAnalytics>(),
 ])
 void main() {
   group(UpdateCravingsCubit, () {
     late MockCravingsRepository mockCravingsRepository;
     late MockCategoriesRepository mockCategoriesRepository;
     late MockDebouncerUtils mockDebouncerUtils;
+    late MockFirebaseAppAnalytics mockFirebaseAppAnalytics;
     setUp(() {
       mockCravingsRepository = MockCravingsRepository();
       mockCategoriesRepository = MockCategoriesRepository();
       mockDebouncerUtils = MockDebouncerUtils();
+      mockFirebaseAppAnalytics = MockFirebaseAppAnalytics();
 
       when(mockDebouncerUtils.run(any)).thenAnswer((invocation) {
         final action = invocation.positionalArguments[0] as VoidCallback;
@@ -40,6 +44,7 @@ void main() {
         mockCravingsRepository,
         mockCategoriesRepository,
         mockDebouncerUtils,
+        mockFirebaseAppAnalytics,
       );
     }
 
@@ -133,7 +138,9 @@ void main() {
       });
     });
 
-    test('deleteCraving should call delete craving successfully', () {
+    test('deleteCraving should call delete craving successfully', () async {
+      when(mockCravingsRepository.remove(any)).thenAnswer((_) => Future.value());
+
       final mockCraving = CravingModel.test;
       final unit = createUnitToTest();
 
@@ -143,6 +150,8 @@ void main() {
         async.elapse(const Duration(seconds: 1));
 
         unit.deleteCraving();
+
+        async.elapse(const Duration(seconds: 1));
 
         verify(mockCravingsRepository.remove(mockCraving.id)).called(1);
       });
