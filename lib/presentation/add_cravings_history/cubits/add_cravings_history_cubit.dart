@@ -65,7 +65,7 @@ class AddCravingsHistoryCubit extends BaseCubit<AddCravingsHistoryState> {
     ));
   }
 
-  Future<void> onAddCravingHistory(CravingModel cravingModel, DateTime? selectedDate) async {
+  Future<void> onAddCravingHistory(CravingModel cravingModel, DateTime selectedDate) async {
     await _cravingsHistoryRepository.insert(cravingModel, createdAt: selectedDate);
     unawaited(_firebaseAppAnalytics.logEvent(
       name: AnalyticsEvents.eventAddCravingHistory,

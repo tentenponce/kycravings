@@ -43,7 +43,7 @@ class AddCravingsHistoryItemView extends StatelessWidget {
           DateTime.now().millisecondsSinceEpoch,
         ));
 
-        if (context.mounted) {
+        if (context.mounted && selectedDate != null) {
           await context.read<AddCravingsHistoryCubit>().onAddCravingHistory(cravingModel, selectedDate);
 
           if (context.mounted) {
