@@ -29,7 +29,7 @@ class CravingsHistoryCubit extends BaseCubit<CravingsHistoryState> {
   }
 
   Future<void> onScrollBottom() async {
-    if (_isBottomReached) {
+    if (_isBottomReached || state.isScrollBottomLoading || state.isLoading) {
       return;
     }
 
@@ -41,6 +41,7 @@ class CravingsHistoryCubit extends BaseCubit<CravingsHistoryState> {
 
     if (cravingHistory.isEmpty) {
       _isBottomReached = true;
+      emit(state.copyWith(isScrollBottomLoading: false));
       return;
     }
 
