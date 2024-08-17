@@ -15,10 +15,39 @@ def appIdSuffix = dartDefines.appIdSuffix != 'appIdSuffix' ? dartDefines.appIdSu
 
 // create google services json file
 if (dartDefines.androidGoogleServicesJson?.trim()) {
+    println 'creating google services json'
     def encoded = dartDefines.androidGoogleServicesJson
     def decoded = new String(encoded.decodeBase64())
     def googleServicesJsonFile = new File("app/google-services.json")
     googleServicesJsonFile.write(decoded)
+}
+
+// create keystore properties
+if (dartDefines.androidKeystoreProperties?.trim()) {
+    println 'creating keystore properties'
+    def encoded = dartDefines.androidKeystoreProperties
+    def decoded = new String(encoded.decodeBase64())
+    def androidKeystorePropertiesFile = new File("app/kycravings.keystore.properties")
+    androidKeystorePropertiesFile.write(decoded)
+}
+
+// define keystore
+def keystoreProperties = new Properties()
+def keyStorePropertiesFileName = 'kycravings.keystore.properties'
+def keystorePropertiesFile = file(keyStorePropertiesFileName)
+def keystoreFileExists = false
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+     def keystoreFile = file(keystoreProperties['storeFile'])
+     keystoreFileExists = keystoreFile.exists()
+     if (keystoreFileExists) {
+        println 'Signing with provided keystore'
+     } else {
+        println 'Could not find signing keystore'
+     }
+} else {
+    println 'Could not find signing keystore properties'
 }
 
 def localProperties = new Properties()
@@ -66,11 +95,30 @@ android {
         }
     }
 
+    signingConfigs {
+        if (keystoreFileExists) {
+            release {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                v1SigningEnabled true
+                v2SigningEnabled true
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+            multiDexEnabled true
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig keystoreFileExists ? signingConfigs.release : signingConfigs.debug
+            // adding these filters when creating build to prevent the creation of x86 builds.
+            ndk {
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
+            }
         }
     }
 }
