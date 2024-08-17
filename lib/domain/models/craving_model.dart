@@ -9,6 +9,14 @@ part 'craving_model.g.dart';
 
 @CopyWith()
 class CravingModel extends Equatable {
+  static CravingModel sample = CravingModel(
+    id: 1,
+    name: 'Sample Dish',
+    categories: [CategoryModel.sample],
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
+
   static CravingModel empty = CravingModel(
     id: 0,
     name: '',

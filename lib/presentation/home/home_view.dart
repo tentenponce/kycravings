@@ -10,6 +10,7 @@ import 'package:kycravings/presentation/home/states/home_state.dart';
 import 'package:kycravings/presentation/home/subviews/craving_satisfied_view.dart';
 import 'package:kycravings/presentation/home/subviews/predict_button.dart';
 import 'package:kycravings/presentation/home/subviews/predicted_craving_view.dart';
+import 'package:kycravings/presentation/home/subviews/tutorial_details_view.dart';
 import 'package:kycravings/presentation/shared/assets/assets.gen.dart';
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
@@ -18,6 +19,7 @@ import 'package:kycravings/presentation/shared/resources/kyc_text_styles.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_app_bar.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shake/shake.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class HomeView extends StatelessWidget with ViewCubitMixin<HomeCubit> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -42,11 +44,17 @@ class _HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<_HomeView> {
+  final GlobalKey _predictKey = GlobalKey();
+  final GlobalKey _satisfiedKey = GlobalKey();
+  final GlobalKey _drawerKey = GlobalKey();
+
   ShakeDetector? _detector;
 
   @override
   void initState() {
     super.initState();
+
+    context.read<HomeCubit>().showTutorial = _showTutorial;
 
     _detector = ShakeDetector.autoStart(onPhoneShake: () {
       unawaited(context.read<HomeCubit>().predict(isShake: true));
@@ -59,6 +67,57 @@ class _HomeViewState extends State<_HomeView> {
     super.dispose();
   }
 
+  void _showTutorial() {
+    TutorialCoachMark(
+      targets: [
+        TargetFocus(
+          identify: HomeAppTutorial.predict,
+          keyTarget: _predictKey,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              child: TutorialDetailsView(
+                title: I18n.of(context).homeTutorialPredictTitle,
+                message: I18n.of(context).homeTutorialPredictMessage,
+              ),
+            ),
+          ],
+        ),
+        TargetFocus(
+          identify: HomeAppTutorial.satisfied,
+          keyTarget: _satisfiedKey,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              child: TutorialDetailsView(
+                title: I18n.of(context).homeTutorialSatisfiedTitle,
+                message: I18n.of(context).homeTutorialSatisfiedMessage,
+              ),
+            ),
+          ],
+        ),
+        TargetFocus(
+          identify: HomeAppTutorial.drawer,
+          keyTarget: _drawerKey,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              child: TutorialDetailsView(
+                title: I18n.of(context).homeTutorialDrawerTitle,
+                message: I18n.of(context).homeTutorialDrawerMessage,
+              ),
+            ),
+          ],
+        ),
+      ],
+      hideSkip: true,
+      colorShadow: KycColors.secondary,
+      onClickTarget: (target) async {
+        await context.read<HomeCubit>().onNextTutorial(target.identify as HomeAppTutorial);
+      },
+    ).show(context: context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +126,8 @@ class _HomeViewState extends State<_HomeView> {
       drawer: const DrawerView(),
       appBar: KycAppBar(
         title: I18n.of(context).appName,
-        leadingIcon: const Icon(
+        leadingIcon: Icon(
+          key: _drawerKey,
           Icons.menu,
           color: KycColors.white,
         ),
@@ -97,9 +157,9 @@ class _HomeViewState extends State<_HomeView> {
                 ),
               ),
             ),
-            const CravingSatisfiedView(),
+            CravingSatisfiedView(satisfiedKey: _satisfiedKey),
             const SizedBox(height: KycDimens.space6),
-            const PredictButton(),
+            PredictButton(key: _predictKey),
             const SizedBox(height: KycDimens.space6),
             BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
               return state.predictedCraving == null
