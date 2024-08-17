@@ -21,6 +21,7 @@
     "yourCravingsDateMessage": "Updated {ago}",
     "yourCravingsDeleteDialogTitle": "Delete Craving",
     "yourCravingsDeleteDialogMessage": "Are you sure you will not crave for {cravingName} again? This will also be deleted from your history.",
+    "addCravingsTitle": "Add Cravings",
     "addCravingsHint": "Put your food craving here",
     "addCravingsErrorEmpty": "Where's your craving?",
     "addCravingsErrorDuplicate": "{cravingName} already exists.",
@@ -32,8 +33,11 @@
     "addCravingsCategoryDialogErrorDuplicate": "{categoryName} already exists.",
     "addCravingsCategoryDeleteDialogTitle": "Delete Category",
     "addCravingsCategoryDeleteDialogMessage": "Are you sure you want to delete {categoryName}? This category will be deleted from other cravings as well.",
+    "updateCravingsTitle": "Update Cravings",
     "cravingsHistoryTitle": "Cravings History",
     "cravingsHistoryDeleteDialogTitle": "Delete Craving History",
     "cravingsHistoryDeleteDialogMessage": "Are you sure you want to delete this history?",
-    "cravingsHistoryDateMessage": "Craved {ago}"
+    "cravingsHistoryDateMessage": "Craved {ago}",
+    "addCravingsHistoryTitle": "Add Craving History",
+    "addCravingsHistoryMessage": "Select a craving and choose a date to add to your cravings history."
 }

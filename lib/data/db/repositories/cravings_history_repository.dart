@@ -13,7 +13,7 @@ import 'package:kycravings/domain/models/craving_preference_model.dart';
 abstract interface class CravingsHistoryRepository implements Repository<CravingHistoryTable, CravingHistoryTableData> {
   Future<Iterable<CravingHistoryModel>> selectAll({required int limit, required int offset});
   Future<Iterable<CravingPreferenceModel>> cravingPreferences();
-  Future<CravingHistoryModel> insert(CravingModel craving);
+  Future<CravingHistoryModel> insert(CravingModel craving, {DateTime? createdAt});
   Future<int> deleteByCravingId(int cravingId);
   void remove(int id);
   Future<int> deleteOverflowData();
@@ -41,7 +41,7 @@ class CravingsHistoryRepositoryImpl
         'craving_history_table.created_at as created_at '
         'FROM craving_history_table '
         'LEFT JOIN craving_table ON craving_history_table.craving_id=craving_table.id '
-        'ORDER BY craving_history_table.id DESC '
+        'ORDER BY craving_history_table.created_at DESC '
         'LIMIT ? OFFSET ? ';
 
     final results = await customSelect(customQuery, variables: [
@@ -119,10 +119,21 @@ class CravingsHistoryRepositoryImpl
   }
 
   @override
-  Future<CravingHistoryModel> insert(CravingModel craving) async {
+  Future<CravingHistoryModel> insert(CravingModel craving, {DateTime? createdAt}) async {
+    final currentDateTime = DateTime.now();
+    var dateToInsert = createdAt;
+
+    // if createdAt is the same day
+    if (createdAt?.day == currentDateTime.day &&
+        createdAt?.month == currentDateTime.month &&
+        createdAt?.year == currentDateTime.year) {
+      dateToInsert = currentDateTime;
+    }
+
     final addedCravingHistory = await into(table).insertReturning(
       CravingHistoryTableCompanion(
         cravingId: Value(craving.id),
+        createdAt: Value(dateToInsert ?? DateTime.now()),
       ),
     );
 

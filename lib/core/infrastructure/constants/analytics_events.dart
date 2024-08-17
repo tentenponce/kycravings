@@ -15,6 +15,7 @@ abstract final class AnalyticsEvents {
   static const String eventRemoveCategory = 'app_event_remove_category';
   static const String eventAddCategoryFail = 'app_event_add_category_fail';
   static const String eventAddCategorySuccess = 'app_event_add_category_success';
+  static const String eventAddCravingHistory = 'app_event_add_craving_history';
 
   static const String paramCraving = 'craving';
   static const String paramCategory = 'category';

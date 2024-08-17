@@ -18,14 +18,19 @@ class CravingsHistoryCubit extends BaseCubit<CravingsHistoryState> {
 
   @override
   Future<void> init() async {
+    await getCravings();
+    onInitialLoad();
+  }
+
+  Future<void> getCravings() async {
     emit(state.copyWith(isLoading: true));
+    _isBottomReached = false;
     final cravingHistory = await _cravingsHistoryRepository.selectAll(
       limit: _historyLimit,
       offset: 0,
     );
 
     emit(state.copyWith(cravingsHistory: cravingHistory, isLoading: false));
-    onInitialLoad();
   }
 
   Future<void> onScrollBottom() async {

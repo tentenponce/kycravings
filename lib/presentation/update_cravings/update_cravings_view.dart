@@ -34,7 +34,7 @@ class _UpdateCravingsView extends StatelessWidget {
     return Scaffold(
       backgroundColor: KycColors.white,
       appBar: KycAppBar(
-        title: I18n.of(context).yourCravingsTitle,
+        title: I18n.of(context).updateCravingsTitle,
         leadingIcon: const Icon(
           Icons.arrow_back,
           color: KycColors.white,
