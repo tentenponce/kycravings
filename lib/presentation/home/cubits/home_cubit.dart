@@ -117,6 +117,7 @@ class HomeCubit extends BaseCubit<HomeState> {
           AnalyticsEvents.paramCraving: state.predictedCraving!.name,
         },
       ));
+      _logger.log(LogLevel.info, 'choosing craving: ${state.predictedCraving!.name}');
       await _cravingsHistoryRepository.insert(state.predictedCraving!);
       emit(state.copyWith(predictedCraving: null));
     }

@@ -66,4 +66,7 @@ abstract final class KycDimens {
   static const double paddingButtonSmall = 6;
 
   static const double predictShimmerHeight = 64;
+
+  static const double textShimmerWidth = 120;
+  static const double descriptionShimmerWidth = 240;
 }

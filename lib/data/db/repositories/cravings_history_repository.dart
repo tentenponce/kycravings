@@ -9,7 +9,7 @@ import 'package:kycravings/domain/models/craving_model.dart';
 import 'package:kycravings/domain/models/craving_preference_model.dart';
 
 abstract interface class CravingsHistoryRepository implements Repository<CravingHistoryTable, CravingHistoryTableData> {
-  Future<Iterable<CravingHistoryModel>> selectAll();
+  Future<Iterable<CravingHistoryModel>> selectAll({required int limit, required int offset});
   Future<Iterable<CravingPreferenceModel>> cravingPreferences();
   Future<CravingHistoryModel> insert(CravingModel craving);
   Future<int> deleteByCravingId(int cravingId);
@@ -28,7 +28,7 @@ class CravingsHistoryRepositoryImpl
   );
 
   @override
-  Future<Iterable<CravingHistoryModel>> selectAll() async {
+  Future<Iterable<CravingHistoryModel>> selectAll({required int limit, required int offset}) async {
     const customQuery = 'SELECT '
         'craving_history_table.id as id, '
         'craving_table.id as craving_id, '
@@ -38,9 +38,13 @@ class CravingsHistoryRepositoryImpl
         'craving_history_table.created_at as created_at '
         'FROM craving_history_table '
         'LEFT JOIN craving_table ON craving_history_table.craving_id=craving_table.id '
-        'ORDER BY craving_history_table.created_at DESC';
+        'ORDER BY craving_history_table.id DESC '
+        'LIMIT ? OFFSET ? ';
 
-    final results = await customSelect(customQuery).get();
+    final results = await customSelect(customQuery, variables: [
+      Variable.withInt(limit),
+      Variable.withInt(offset),
+    ]).get();
 
     final cravingCategoryResults = await _cravingCategoryRepository.selectAll();
 
