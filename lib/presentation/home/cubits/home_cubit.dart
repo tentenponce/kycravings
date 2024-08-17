@@ -55,7 +55,7 @@ class HomeCubit extends BaseCubit<HomeState> {
         await _appSharedPreferences.getValue<bool>(SharedPrefsKeys.doNotShowCravingSatisfiedDialogAgain) ?? false;
   }
 
-  Future<void> predict() async {
+  Future<void> predict({bool isShake = false}) async {
     if (state.isPredicting || state.isSwipePredicting) {
       return;
     }
@@ -71,7 +71,8 @@ class HomeCubit extends BaseCubit<HomeState> {
       _finishPredicting();
     }));
 
-    unawaited(_firebaseAppAnalytics.logEvent(name: AnalyticsEvents.eventPredict));
+    unawaited(_firebaseAppAnalytics.logEvent(
+        name: isShake ? AnalyticsEvents.eventShakePredict : AnalyticsEvents.eventPredict));
     // if there is a predicted craving, threat it as ignored and add to ignored cravings
     await _ignoreCraving();
 
