@@ -10,10 +10,12 @@ import 'package:kycravings/data/db/repositories/ignored_cravings_repository.dart
 import 'package:kycravings/data/local/app_shared_preferences.dart';
 import 'package:kycravings/domain/core/utils/random_utils.dart';
 import 'package:kycravings/domain/models/category_model.dart';
+import 'package:kycravings/domain/models/craving_history_model.dart';
 import 'package:kycravings/domain/models/craving_model.dart';
 import 'package:kycravings/domain/models/ignored_craving_model.dart';
 import 'package:kycravings/domain/use_cases/predict_use_case.dart';
 import 'package:kycravings/presentation/home/cubits/home_cubit.dart';
+import 'package:kycravings/presentation/home/states/home_state.dart';
 import 'package:kycravings/presentation/shared/utils/debouncer_utils.dart';
 import 'package:kycravings/presentation/shared/utils/delay_utils.dart';
 import 'package:mockito/annotations.dart';
@@ -72,8 +74,35 @@ void main() {
         mockDelayUtils,
         mockRandomUtils,
         mockDebouncerUtils,
-      );
+      )..showTutorial = () {};
     }
+
+    test('init should show tutorial if no history', () async {
+      when(mockCravingsHistoryRepository.selectAll(limit: 1, offset: 0)).thenAnswer((_) async => []);
+
+      final unit = createUnitToTest();
+      var isTutorialShown = false;
+      unit.showTutorial = () {
+        isTutorialShown = true;
+      };
+      await unit.init();
+
+      expect(isTutorialShown, true);
+    });
+
+    test('init should show not tutorial if has history', () async {
+      when(mockCravingsHistoryRepository.selectAll(limit: 1, offset: 0))
+          .thenAnswer((_) async => [CravingHistoryModel.test]);
+
+      final unit = createUnitToTest();
+      var isTutorialShown = false;
+      unit.showTutorial = () {
+        isTutorialShown = true;
+      };
+      await unit.init();
+
+      expect(isTutorialShown, false);
+    });
 
     test('predict should emit predicted craving successfully', () async {
       final mockPredictedCraving = CravingModel.test;
@@ -151,6 +180,35 @@ void main() {
 
       await expectLater(unit.isDoNotShowCravingSatisfiedDialogAgain, true);
       verify(mockAppSharedPreferences.setValue(SharedPrefsKeys.doNotShowCravingSatisfiedDialogAgain, true)).called(1);
+    });
+
+    test('onNextTutorial should set satisfied with sample craving if tutorial is predict', () async {
+      final unit = createUnitToTest();
+      await unit.init();
+      await unit.onNextTutorial(HomeAppTutorial.predict);
+
+      expect(unit.state.tutorial, HomeAppTutorial.satisfied);
+      expect(unit.state.predictedCraving, CravingModel.sample);
+    });
+
+    test('onNextTutorial should set drawer and clear sample craving if tutorial is satisfied', () async {
+      final unit = createUnitToTest();
+      await unit.init();
+      await unit.onNextTutorial(HomeAppTutorial.predict);
+      await unit.onNextTutorial(HomeAppTutorial.satisfied);
+
+      expect(unit.state.tutorial, HomeAppTutorial.drawer);
+      expect(unit.state.predictedCraving, null);
+    });
+
+    test('onNextTutorial should set tutorial null if tutorial is drawer', () async {
+      final unit = createUnitToTest();
+      await unit.init();
+      await unit.onNextTutorial(HomeAppTutorial.predict);
+      await unit.onNextTutorial(HomeAppTutorial.satisfied);
+      await unit.onNextTutorial(HomeAppTutorial.drawer);
+
+      expect(unit.state.tutorial, null);
     });
   });
 }

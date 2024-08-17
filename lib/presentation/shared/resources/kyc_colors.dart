@@ -3,6 +3,7 @@ import 'dart:ui';
 abstract final class KycColors {
   static const Color primary = Color(0xFF399918);
   static const Color lightPrimary = Color(0xFFC1EED4);
+  static const Color secondary = Color(0xFF5D4037);
 
   static const Color transparent = Color(0x00000000);
   static const Color white = Color(0xFFFFFFFF);

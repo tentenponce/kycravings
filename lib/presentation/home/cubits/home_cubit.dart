@@ -18,6 +18,8 @@ import 'package:kycravings/presentation/shared/utils/delay_utils.dart';
 
 @injectable
 class HomeCubit extends BaseCubit<HomeState> {
+  late void Function() showTutorial;
+
   final Logger _logger;
   final PredictUseCase _predictUseCase;
   final CravingsHistoryRepository _cravingsHistoryRepository;
@@ -53,6 +55,13 @@ class HomeCubit extends BaseCubit<HomeState> {
   Future<void> init() async {
     isDoNotShowCravingSatisfiedDialogAgain =
         await _appSharedPreferences.getValue<bool>(SharedPrefsKeys.doNotShowCravingSatisfiedDialogAgain) ?? false;
+
+    // if there is no craving history, show tutorial
+    final results = await _cravingsHistoryRepository.selectAll(limit: 1, offset: 0);
+    if (results.isEmpty) {
+      emit(state.copyWith(tutorial: HomeAppTutorial.predict));
+      showTutorial();
+    }
   }
 
   Future<void> predict({bool isShake = false}) async {
@@ -127,6 +136,17 @@ class HomeCubit extends BaseCubit<HomeState> {
   Future<void> doNotShowCravingSatisfiedDialogAgain({required bool isDontShowAgain}) async {
     isDoNotShowCravingSatisfiedDialogAgain = isDontShowAgain;
     await _appSharedPreferences.setValue(SharedPrefsKeys.doNotShowCravingSatisfiedDialogAgain, isDontShowAgain);
+  }
+
+  Future<void> onNextTutorial(HomeAppTutorial currentTutorial) async {
+    switch (currentTutorial) {
+      case HomeAppTutorial.predict:
+        emit(state.copyWith(tutorial: HomeAppTutorial.satisfied, predictedCraving: CravingModel.sample));
+      case HomeAppTutorial.satisfied:
+        emit(state.copyWith(tutorial: HomeAppTutorial.drawer, predictedCraving: null));
+      case HomeAppTutorial.drawer:
+        emit(state.copyWith(tutorial: null));
+    }
   }
 
   void _finishPredicting() {

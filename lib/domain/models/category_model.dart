@@ -6,6 +6,13 @@ part 'category_model.g.dart';
 
 @CopyWith()
 class CategoryModel extends Equatable {
+  static CategoryModel sample = CategoryModel(
+    id: 1,
+    name: 'Salty',
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
+
   @visibleForTesting
   static CategoryModel empty = CategoryModel(
     id: 0,

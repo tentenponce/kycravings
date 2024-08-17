@@ -14,7 +14,11 @@ import 'package:kycravings/presentation/shared/resources/kyc_text_styles.dart';
 import 'package:lottie/lottie.dart';
 
 class CravingSatisfiedView extends StatefulWidget {
-  const CravingSatisfiedView({super.key});
+  final GlobalKey satisfiedKey;
+  const CravingSatisfiedView({
+    required this.satisfiedKey,
+    super.key,
+  });
 
   @override
   State<CravingSatisfiedView> createState() => _CravingSatisfiedViewState();
@@ -68,6 +72,7 @@ class _CravingSatisfiedViewState extends State<CravingSatisfiedView> with Ticker
                     alignment: Alignment.center,
                     children: [
                       AnimatedContainer(
+                        key: widget.satisfiedKey,
                         duration: const Duration(milliseconds: 150),
                         width: _cravingSatisfiedSize,
                         height: _cravingSatisfiedSize,
@@ -116,7 +121,7 @@ class _CravingSatisfiedViewState extends State<CravingSatisfiedView> with Ticker
   }
 
   Future<void> _onCravingSatisfied() async {
-    if (context.read<HomeCubit>().isDoNotShowCravingSatisfiedDialogAgain) {
+    if (!context.read<HomeCubit>().isDoNotShowCravingSatisfiedDialogAgain) {
       final result = await showDialog<Map<String, dynamic>>(
           context: context, builder: (context) => const CravingSatisfiedDialog());
 
