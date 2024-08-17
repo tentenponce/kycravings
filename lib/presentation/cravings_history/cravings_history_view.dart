@@ -51,8 +51,7 @@ class _CravingsHistoryViewState extends State<_CravingsHistoryView> {
     final maxScroll = _scrollController.position.maxScrollExtent - 10; // Use a small offset to account for rounding
     final currentScroll = _scrollController.offset;
 
-    final state = context.read<CravingsHistoryCubit>().state;
-    if (!state.isLoading && !state.isScrollBottomLoading && currentScroll >= maxScroll) {
+    if (currentScroll >= maxScroll) {
       unawaited(context.read<CravingsHistoryCubit>().onScrollBottom());
     }
   }

@@ -12,7 +12,11 @@ import 'package:kycravings/domain/models/category_model.dart';
 import 'package:kycravings/domain/models/craving_model.dart';
 
 abstract interface class CravingsRepository implements Repository<CravingTable, CravingTableData> {
-  Future<List<CravingModel>> selectWithCategories({int? categoryFilter});
+  Future<List<CravingModel>> selectWithCategories({
+    int? limit,
+    int? offset,
+    int? categoryFilter,
+  });
 
   /// get craving without categories
   Future<CravingModel?> getCravingByName(String cravingName);
@@ -43,38 +47,53 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
   }
 
   @override
-  Future<List<CravingModel>> selectWithCategories({int? categoryFilter}) async {
+  Future<List<CravingModel>> selectWithCategories({
+    int? limit,
+    int? offset,
+    int? categoryFilter,
+  }) async {
     final categoryFilterQuery = 'WHERE craving_id IN '
         '(SELECT craving_table.id FROM craving_table '
         'LEFT JOIN craving_category_table ON craving_table.id=craving_category_table.craving_id '
         'WHERE craving_category_table.category_id=$categoryFilter) ';
 
-    final customQuery = 'SELECT '
+    final cravingCustomQuery = 'SELECT '
         'craving_table.id as craving_id, '
         'craving_table.name as craving_name, '
         'craving_table.created_at as craving_created_at, '
-        'craving_table.updated_at as craving_updated_at, '
+        'craving_table.updated_at as craving_updated_at '
+        'FROM craving_table '
+        '${categoryFilter != null ? categoryFilterQuery : ''} '
+        'ORDER BY craving_table.created_at DESC '
+        '${limit != null ? 'LIMIT $limit ' : ''}'
+        '${offset != null ? 'OFFSET $offset ' : ''}';
+
+    final categoryCustomQuery = 'SELECT '
+        'craving_table.id as craving_id, '
         'category_table.id as category_id, '
         'category_table.name as category_name, '
         'category_table.created_at as category_created_at, '
         'category_table.updated_at as category_updated_at '
         'FROM craving_category_table '
-        // right join to get all cravings even if it doesn't have a category
-        'RIGHT JOIN craving_table ON craving_category_table.craving_id=craving_table.id '
+        'LEFT JOIN craving_table ON craving_category_table.craving_id=craving_table.id '
         'LEFT JOIN category_table ON craving_category_table.category_id=category_table.id '
         '${categoryFilter != null ? categoryFilterQuery : ''} '
-        'ORDER BY craving_table.created_at DESC';
+        'ORDER BY craving_table.created_at DESC ';
 
-    _logger.log(LogLevel.debug, 'selectWithCategories query: $customQuery');
+    _logger.log(LogLevel.debug, 'cravingCustomQuery: $cravingCustomQuery');
+    _logger.log(LogLevel.debug, 'categoryCustomQuery: $categoryCustomQuery');
 
-    final results = await customSelect(customQuery).get();
+    final cravingResults = await customSelect(cravingCustomQuery).get();
+    final categoryResults = await customSelect(categoryCustomQuery).get();
 
-    // get unique cravings IDs
-    final cravingIds = results.map((result) => result.read<int>('craving_id')).toSet().toList();
+    return cravingResults.map((cravingResult) {
+      final cravingId = cravingResult.read<int>('craving_id');
+      final cravingName = cravingResult.read<String>('craving_name');
+      final cravingCreatedAt = cravingResult.read<DateTime>('craving_created_at');
+      final cravingUpdatedAt = cravingResult.read<DateTime>('craving_updated_at');
 
-    return cravingIds.map((cravingId) {
       // get categories for each craving
-      final categories = results
+      final categories = categoryResults
           .where((result) {
             return result.read<int>('craving_id') == cravingId;
           })
@@ -92,14 +111,6 @@ class CravingsRepositoryImpl extends BaseRepository<CravingsDatabase, CravingTab
               updatedAt: categoryUpdatedAt,
             );
           });
-
-      // get name of the craving ID
-      final cravingResult = results.firstWhere((result) {
-        return result.read<int>('craving_id') == cravingId;
-      });
-      final cravingName = cravingResult.read<String>('craving_name');
-      final cravingCreatedAt = cravingResult.read<DateTime>('craving_created_at');
-      final cravingUpdatedAt = cravingResult.read<DateTime>('craving_updated_at');
 
       return CravingModel(
         id: cravingId,
