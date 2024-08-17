@@ -46,5 +46,8 @@
     "cravingsHistoryDeleteDialogMessage": "Are you sure you want to delete this history?",
     "cravingsHistoryDateMessage": "Craved {ago}",
     "addCravingsHistoryTitle": "Add Craving History",
-    "addCravingsHistoryMessage": "Select a craving and choose a date to add to your cravings history."
+    "addCravingsHistoryMessage": "Select a craving and choose a date to add to your cravings history.",
+    "aboutTitle": "About",
+    "aboutSubTitle": "Know Your Cravings!",
+    "aboutMessage": "The app utilizes an attribution model called Time Decay Attribution, which uses the most recent cravings to predict your next craving. It also considers any ignored cravings throughout the day to further refine its predictions.\n\nThe more you use the app, the better it will learn and improve its predictions for you!"
 }
