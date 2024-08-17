@@ -8,6 +8,7 @@ enum ViewRoute {
 
 abstract interface class NavigationUtils {
   Future<T?>? push<T>(ViewRoute viewRoute, {Object? arguments});
+  Future<T?>? pushReplacement<T>(ViewRoute viewRoute, {Object? arguments});
 }
 
 @LazySingleton(as: NavigationUtils)
@@ -31,5 +32,15 @@ class NavigationUtilsImpl implements NavigationUtils {
       case ViewRoute.home:
         return HomeView();
     }
+  }
+
+  @override
+  Future<T?>? pushReplacement<T>(ViewRoute viewRoute, {Object? arguments}) {
+    return navigatorKey.currentState?.pushReplacement(
+      MaterialPageRoute<T>(
+        builder: (context) => _getRoute(viewRoute),
+        settings: RouteSettings(arguments: arguments),
+      ),
+    );
   }
 }
