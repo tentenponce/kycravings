@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kycravings/domain/models/craving_model.dart';
@@ -15,6 +17,7 @@ import 'package:kycravings/presentation/shared/resources/kyc_dimens.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_text_styles.dart';
 import 'package:kycravings/presentation/shared/widgets/kyc_app_bar.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shake/shake.dart';
 
 class HomeView extends StatelessWidget with ViewCubitMixin<HomeCubit> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -27,16 +30,39 @@ class HomeView extends StatelessWidget with ViewCubitMixin<HomeCubit> {
   }
 }
 
-class _HomeView extends StatelessWidget {
+class _HomeView extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
+
   const _HomeView({
     required this.scaffoldKey,
   });
 
   @override
+  State<_HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<_HomeView> {
+  ShakeDetector? _detector;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _detector = ShakeDetector.autoStart(onPhoneShake: () {
+      unawaited(context.read<HomeCubit>().predict(isShake: true));
+    });
+  }
+
+  @override
+  void dispose() {
+    _detector?.stopListening();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
+      key: widget.scaffoldKey,
       backgroundColor: KycColors.white,
       drawer: const DrawerView(),
       appBar: KycAppBar(
@@ -45,7 +71,7 @@ class _HomeView extends StatelessWidget {
           Icons.menu,
           color: KycColors.white,
         ),
-        onLeadingIconClick: () => scaffoldKey.currentState?.openDrawer(),
+        onLeadingIconClick: () => widget.scaffoldKey.currentState?.openDrawer(),
       ),
       body: AnimatedSize(
         duration: const Duration(milliseconds: 1000),
