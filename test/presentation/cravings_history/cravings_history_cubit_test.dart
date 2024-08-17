@@ -7,7 +7,9 @@ import 'package:mockito/mockito.dart';
 
 import 'cravings_history_cubit_test.mocks.dart';
 
-@GenerateNiceMocks([MockSpec<CravingsHistoryRepository>()])
+@GenerateNiceMocks([
+  MockSpec<CravingsHistoryRepository>(),
+])
 void main() {
   group(CravingsHistoryCubit, () {
     late MockCravingsHistoryRepository mockCravingsHistoryRepository;
@@ -19,7 +21,7 @@ void main() {
     CravingsHistoryCubit createUnitToTest() {
       return CravingsHistoryCubit(
         mockCravingsHistoryRepository,
-      );
+      )..onInitialLoad = () {};
     }
 
     test('init should get craving history successfully', () async {
@@ -28,14 +30,84 @@ void main() {
         CravingHistoryModel.test,
       ];
 
-      when(mockCravingsHistoryRepository.selectAll()).thenAnswer((_) async => mockCravingHistory);
+      when(mockCravingsHistoryRepository.selectAll(
+        limit: anyNamed('limit'),
+        offset: anyNamed('offset'),
+      )).thenAnswer((_) async => mockCravingHistory);
 
       final unit = createUnitToTest();
 
       await unit.init();
 
-      verify(mockCravingsHistoryRepository.selectAll()).called(2);
+      verify(mockCravingsHistoryRepository.selectAll(
+        limit: anyNamed('limit'),
+        offset: anyNamed('offset'),
+      )).called(2);
       expect(unit.state.cravingsHistory, mockCravingHistory);
+    });
+
+    test('onScrollBottom should append new list if has more data', () async {
+      final mockCravingHistory = [
+        CravingHistoryModel.test,
+        CravingHistoryModel.test,
+      ];
+
+      when(mockCravingsHistoryRepository.selectAll(
+        limit: anyNamed('limit'),
+        offset: anyNamed('offset'),
+      )).thenAnswer((_) async => mockCravingHistory);
+
+      final unit = createUnitToTest();
+
+      await unit.init();
+
+      final newCravingHistory = [
+        CravingHistoryModel.test.copyWith(id: 3),
+        CravingHistoryModel.test.copyWith(id: 4),
+      ];
+
+      when(mockCravingsHistoryRepository.selectAll(
+        limit: anyNamed('limit'),
+        offset: anyNamed('offset'),
+      )).thenAnswer((_) async => newCravingHistory);
+
+      await unit.onScrollBottom();
+
+      verify(mockCravingsHistoryRepository.selectAll(
+        limit: anyNamed('limit'),
+        offset: anyNamed('offset'),
+      )).called(3);
+
+      expect(unit.state.cravingsHistory, [...mockCravingHistory, ...newCravingHistory]);
+    });
+
+    test('onScrollBottom should not call craving history if already reached bottom', () async {
+      final mockCravingHistory = [
+        CravingHistoryModel.test,
+        CravingHistoryModel.test,
+      ];
+
+      when(mockCravingsHistoryRepository.selectAll(
+        limit: anyNamed('limit'),
+        offset: anyNamed('offset'),
+      )).thenAnswer((_) async => mockCravingHistory);
+
+      final unit = createUnitToTest();
+
+      await unit.init();
+
+      when(mockCravingsHistoryRepository.selectAll(
+        limit: anyNamed('limit'),
+        offset: anyNamed('offset'),
+      )).thenAnswer((_) async => []);
+
+      await unit.onScrollBottom();
+      await unit.onScrollBottom();
+
+      verify(mockCravingsHistoryRepository.selectAll(
+        limit: anyNamed('limit'),
+        offset: anyNamed('offset'),
+      )).called(3);
     });
 
     test('onCravingDelete should delete craving history successfully', () async {
@@ -44,7 +116,10 @@ void main() {
         CravingHistoryModel.test.copyWith(id: 2),
       ];
 
-      when(mockCravingsHistoryRepository.selectAll()).thenAnswer((_) async => mockCravingHistory);
+      when(mockCravingsHistoryRepository.selectAll(
+        limit: anyNamed('limit'),
+        offset: anyNamed('offset'),
+      )).thenAnswer((_) async => mockCravingHistory);
 
       final unit = createUnitToTest();
 

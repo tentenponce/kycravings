@@ -2,7 +2,6 @@ import 'package:injectable/injectable.dart';
 import 'package:kycravings/data/db/repositories/cravings_history_repository.dart';
 import 'package:kycravings/presentation/core/base/base_cubit.dart';
 import 'package:kycravings/presentation/cravings_history/states/cravings_history_state.dart';
-import 'package:kycravings/presentation/shared/utils/delay_utils.dart';
 
 @injectable
 class CravingsHistoryCubit extends BaseCubit<CravingsHistoryState> {
@@ -10,13 +9,11 @@ class CravingsHistoryCubit extends BaseCubit<CravingsHistoryState> {
 
   final int _historyLimit = 15;
   final CravingsHistoryRepository _cravingsHistoryRepository;
-  final DelayUtils _delayUtils;
 
   bool _isBottomReached = false;
 
   CravingsHistoryCubit(
     this._cravingsHistoryRepository,
-    this._delayUtils,
   ) : super(const CravingsHistoryState.on());
 
   @override
