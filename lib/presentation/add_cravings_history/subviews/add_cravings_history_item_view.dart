@@ -16,8 +16,7 @@ class AddCravingsHistoryItemView extends StatelessWidget {
     super.key,
   });
 
-  @pragma('vm:entry-point')
-  static Route<DateTime> _datePickerRoute(
+  Route<DateTime> _datePickerRoute(
     BuildContext context,
     Object? arguments,
   ) {
