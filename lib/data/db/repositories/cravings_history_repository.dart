@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kycravings/data/db/core/repository.dart';
@@ -14,6 +16,7 @@ abstract interface class CravingsHistoryRepository implements Repository<Craving
   Future<CravingHistoryModel> insert(CravingModel craving);
   Future<int> deleteByCravingId(int cravingId);
   void remove(int id);
+  Future<int> deleteOverflowData();
 }
 
 @LazySingleton(as: CravingsHistoryRepository)
@@ -123,6 +126,9 @@ class CravingsHistoryRepositoryImpl
       ),
     );
 
+    // trigger delete overflow data every insert
+    unawaited(deleteOverflowData());
+
     return CravingHistoryModel(
       id: addedCravingHistory.id,
       cravingModel: craving,
@@ -138,5 +144,21 @@ class CravingsHistoryRepositoryImpl
   @override
   Future<int> remove(int id) async {
     return (delete(table)..where((t) => t.id.equals(id))).go();
+  }
+
+  @override
+  Future<int> deleteOverflowData() async {
+    const historyLimit = 1000;
+    final latestRecordsQuery = select(table)
+      ..orderBy([
+        (t) => OrderingTerm.desc(t.createdAt),
+      ])
+      ..limit(historyLimit);
+
+    final latestRecords = await latestRecordsQuery.get();
+
+    final latestIds = latestRecords.map((r) => r.id).toSet();
+
+    return (delete(table)..where((tbl) => tbl.id.isNotIn(latestIds))).go();
   }
 }
