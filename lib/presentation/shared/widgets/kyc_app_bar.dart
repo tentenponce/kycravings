@@ -5,10 +5,10 @@ import 'package:kycravings/presentation/shared/resources/kyc_text_styles.dart';
 
 class KycAppBar extends StatelessWidget implements PreferredSizeWidget {
   const KycAppBar({
-    super.key,
     required this.title,
     required this.onLeadingIconClick,
     required this.leadingIcon,
+    super.key,
   });
 
   final String title;
