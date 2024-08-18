@@ -31,7 +31,7 @@ class _CravingSatisfiedViewState extends State<CravingSatisfiedView> with Ticker
   bool _isSatisfied = false;
   int _cravingImageIndex = 0;
 
-  // TODO: support for multiple images
+  // TODO(tenten): support for multiple images
   final cravingImages = [
     Assets.images.lipbite.image(),
   ];
