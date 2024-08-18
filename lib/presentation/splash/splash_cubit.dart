@@ -20,7 +20,9 @@ class SplashCubit extends BaseCubit<void> {
     this._ignoredCravingsRepository,
     this._firebaseAppCore,
     this._navigationUtils,
-  ) : super(null);
+  ) : super(null) {
+    _logger.logFor(this);
+  }
 
   @override
   Future<void> init() async {
