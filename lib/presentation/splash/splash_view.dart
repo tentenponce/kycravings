@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kycravings/presentation/core/base/view_cubit_mixin.dart';
+import 'package:kycravings/presentation/home/home_view.dart';
 import 'package:kycravings/presentation/shared/assets/assets.gen.dart';
 import 'package:kycravings/presentation/shared/localization/generated/l10n.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
@@ -13,6 +15,33 @@ class SplashView extends StatelessWidget with ViewCubitMixin<SplashCubit> {
 
   @override
   Widget buildView(BuildContext context) {
+    return const _SplashView();
+  }
+}
+
+class _SplashView extends StatefulWidget {
+  const _SplashView();
+
+  @override
+  State<_SplashView> createState() => _SplashViewState();
+}
+
+class _SplashViewState extends State<_SplashView> {
+  @override
+  void initState() {
+    context.read<SplashCubit>().navigateToHome = () async {
+      await Navigator.of(context).pushReplacement(
+        MaterialPageRoute<void>(
+          builder: (context) => HomeView(),
+        ),
+      );
+    };
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KycColors.primary,
       body: Container(
