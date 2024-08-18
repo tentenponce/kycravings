@@ -11,4 +11,3 @@ coverage:
     - "lib/presentation/shared/*"
     - "lib/presentation/**/*_view.dart"
     - "lib/presentation/**/subviews/*"
-    - "lib/presentation/splash/*" # TODO ignore splash screen since it is failing in pipeline
