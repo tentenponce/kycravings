@@ -5,7 +5,7 @@ import 'package:kycravings/presentation/shared/localization/generated/l10n.dart'
 import 'package:kycravings/presentation/shared/resources/kyc_colors.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_dimens.dart';
 import 'package:kycravings/presentation/shared/resources/kyc_text_styles.dart';
-import 'package:kycravings/presentation/splash/splash_cubit.dart';
+import 'package:kycravings/presentation/splash/cubits/splash_cubit.dart';
 import 'package:lottie/lottie.dart';
 
 class SplashView extends StatelessWidget with ViewCubitMixin<SplashCubit> {
