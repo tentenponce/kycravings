@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kycravings/presentation/splash/cubits/splash_cubit.dart';
+import 'package:kycravings/presentation/update_cravings/cubits/update_cravings_cubit.dart';
 
 void main() {
-  group(SplashCubit, () {
+  group(UpdateCravingsCubit, () {
     setUp(() async {});
   });
 }
