@@ -35,6 +35,6 @@ class SplashCubit extends BaseCubit<void> {
     _logger.log(LogLevel.info, 'deleted $deletedCount ignored cravings');
 
     // navigate to home screen
-    await _navigationUtils.pushReplacement<void>(ViewRoute.home);
+    // await _navigationUtils.pushReplacement<void>(ViewRoute.home);
   }
 }
