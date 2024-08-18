@@ -38,7 +38,7 @@ void main() {
         mockGetInitialCravingsUseCase,
         mockIgnoredCravingsRepository,
         mockFirebaseAppCore,
-      );
+      )..navigateToHome = () {};
     }
 
     test('init should clean up ignored cravings', () async {
