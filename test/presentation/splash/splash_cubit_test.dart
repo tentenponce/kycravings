@@ -3,7 +3,7 @@ import 'package:kycravings/core/infrastructure/platform/firebase_app_core.dart';
 import 'package:kycravings/core/logging/logger.dart';
 import 'package:kycravings/data/db/repositories/ignored_cravings_repository.dart';
 import 'package:kycravings/domain/use_cases/get_initial_cravings_use_case.dart';
-import 'package:kycravings/presentation/splash/cubits/splash_cubit.dart';
+import 'package:kycravings/presentation/update_cravings/cubits/update_cravings_cubit.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -16,7 +16,7 @@ import 'splash_cubit_test.mocks.dart';
   MockSpec<FirebaseAppCore>(),
 ])
 void main() {
-  group(SplashCubit, () {
+  group(UpdateCravingsCubit, () {
     late MockLogger mockLogger;
     late MockGetInitialCravingsUseCase mockGetInitialCravingsUseCase;
     late MockIgnoredCravingsRepository mockIgnoredCravingsRepository;
