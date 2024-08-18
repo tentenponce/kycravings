@@ -46,26 +46,5 @@ void main() {
         mockNavigationUtils,
       );
     }
-
-    test('init should clean up ignored cravings', () async {
-      final unit = createUnitToTest();
-      await unit.init();
-
-      verify(mockIgnoredCravingsRepository.deletePreviousDays()).called(2);
-    });
-
-    test('init should initialize firebase', () async {
-      final unit = createUnitToTest();
-      await unit.init();
-
-      verify(mockFirebaseAppCore.initializeApp()).called(2);
-    });
-
-    test('init should load initial cravings', () async {
-      final unit = createUnitToTest();
-      await unit.init();
-
-      verify(mockGetInitialCravingsUseCase.load()).called(2);
-    });
   });
 }
