@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
-import 'package:kycravings/domain/core/utils/random_utils.dart';
 import 'package:kycravings/presentation/home/cubits/home_cubit.dart';
 import 'package:kycravings/presentation/home/states/home_state.dart';
 import 'package:kycravings/presentation/home/subviews/craving_satisfied_dialog.dart';
@@ -26,22 +24,17 @@ class CravingSatisfiedView extends StatefulWidget {
 
 class _CravingSatisfiedViewState extends State<CravingSatisfiedView> with TickerProviderStateMixin {
   late AnimationController _checkController;
+  late AnimationController _yummyController;
   double _cravingSatisfiedSize = KycDimens.icon10;
   TextStyle _cravingSatisfiedTextSize = KycTextStyles.textStyle5Bold();
   bool _isSatisfied = false;
-  int _cravingImageIndex = 0;
-
-  // TODO(tenten): support for multiple images
-  final cravingImages = [
-    Assets.images.lipbite.image(),
-  ];
 
   @override
   void initState() {
     super.initState();
 
-    _cravingImageIndex = GetIt.instance.get<RandomUtils>().randomizeInt(0, cravingImages.length - 1);
     _checkController = AnimationController(vsync: this);
+    _yummyController = AnimationController(vsync: this);
   }
 
   @override
@@ -62,6 +55,12 @@ class _CravingSatisfiedViewState extends State<CravingSatisfiedView> with Ticker
                   onTap: _onCravingSatisfied,
                   onTapDown: (_) => setState(() {
                     if (_cravingSatisfiedSize != 0) {
+                      _yummyController.dispose();
+                      _yummyController = AnimationController(vsync: this);
+                      _yummyController
+                        ..reset()
+                        ..duration = const Duration(milliseconds: 1000)
+                        ..forward();
                       _cravingSatisfiedSize = KycDimens.icon9;
                       _cravingSatisfiedTextSize = KycTextStyles.textStyle3Bold();
                     }
@@ -76,7 +75,11 @@ class _CravingSatisfiedViewState extends State<CravingSatisfiedView> with Ticker
                         duration: const Duration(milliseconds: 150),
                         width: _cravingSatisfiedSize,
                         height: _cravingSatisfiedSize,
-                        child: cravingImages[_cravingImageIndex],
+                        child: Lottie.asset(
+                          controller: _yummyController,
+                          Assets.lottie.yummy,
+                          repeat: false,
+                        ),
                       ),
                       if (_isSatisfied)
                         Lottie.asset(
@@ -163,7 +166,6 @@ class _CravingSatisfiedViewState extends State<CravingSatisfiedView> with Ticker
 
   void _resetState() {
     setState(() {
-      _cravingImageIndex = GetIt.instance.get<RandomUtils>().randomizeInt(0, cravingImages.length - 1);
       _isSatisfied = false;
       _cravingSatisfiedSize = KycDimens.icon10;
       _cravingSatisfiedTextSize = KycTextStyles.textStyle5Bold();
